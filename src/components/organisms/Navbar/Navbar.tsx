@@ -12,7 +12,7 @@ const Navbar = ({ title }: NavbarProps) => {
 
   return (
     <Container
-      className="fixed text-white"
+      className="fixed text-white z-10"
       w={"100%"}
       h={50}
       fluid

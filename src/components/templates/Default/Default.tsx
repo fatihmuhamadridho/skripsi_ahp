@@ -6,7 +6,7 @@ import React from "react";
 
 interface DefaultTemplateProps {
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const DefaultTemplate = ({ title, children }: DefaultTemplateProps) => {
@@ -15,7 +15,7 @@ const DefaultTemplate = ({ title, children }: DefaultTemplateProps) => {
       <Head>
         <title>{title}</title>
       </Head>
-      <Flex direction={"row"}>
+      <Flex className="overflow-hidden" direction={"row"}>
         <Sidebar />
         <Box w={"100%"} ml={230}>
           <Navbar title={title} />

@@ -51,7 +51,7 @@ const listRoutes: listRouterProps[] = [
         endpoint: "/data/data-karyawan",
       },
       {
-        title: "Data Kriteri",
+        title: "Data Kriteria",
         endpoint: "/data/data-kriteria",
       },
       {
@@ -107,7 +107,7 @@ const listRoutes: listRouterProps[] = [
   },
   {
     title: "Logout",
-    endpoint: "/",
+    endpoint: "/logout",
     icon: <IconLogout2 size={18} />,
   },
 ];
@@ -148,9 +148,11 @@ const Sidebar = () => {
     }
   };
 
+  console.log({ pathname: router.pathname.split("/") });
+
   return (
     <Container
-      className="fixed text-white"
+      className="fixed text-white z-10"
       mx={0}
       pb={60}
       p={0}
@@ -202,6 +204,11 @@ const Sidebar = () => {
                       w={"100%"}
                       px={8}
                       py={12}
+                      bg={
+                        router.pathname === routes.endpoint
+                          ? "#2C3B41"
+                          : "#222D32"
+                      }
                       onClick={() => router.push(routes.endpoint!)}
                     >
                       <Flex gap={8} align={"center"}>
@@ -211,13 +218,22 @@ const Sidebar = () => {
                     </UnstyledButton>
                   );
 
-                if (routes.title === "divider") return <Divider my={12} />;
+                if (routes.title === "divider")
+                  return <Divider key={routesIndex} my={12} />;
 
                 return (
                   <Accordion.Item key={routesIndex} value={routes.title}>
                     <Accordion.Control
                       className="!text-white"
-                      bg={"#222D32"}
+                      bg={
+                        routes.children &&
+                        routes.children[0].endpoint.includes(
+                          router.pathname.split("/")[1]
+                        ) &&
+                        router.pathname !== "/"
+                          ? "#2C3B41"
+                          : "#222D32"
+                      }
                       px={8}
                       onClick={() => handleExpandMenu(routes.title)}
                     >
@@ -230,7 +246,12 @@ const Sidebar = () => {
                       <Accordion.Panel
                         key={childIndex}
                         className="cursor-pointer !text-[14px]"
-                        bg={"#222D32"}
+                        classNames={{ content: "!py-[10.5px]" }}
+                        bg={
+                          router.pathname === child.endpoint
+                            ? "#2C3B41"
+                            : "#222D32"
+                        }
                         pl={16}
                         onClick={() => router.push(child.endpoint)}
                       >

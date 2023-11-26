@@ -1,10 +1,11 @@
-import { Box, SimpleGrid, Table } from "@mantine/core";
+import { Box, Flex, SimpleGrid, Table } from "@mantine/core";
 import React from "react";
 
 export interface DataTablePrpos {
   header: tableHeadersProps[];
   data?: any[];
   width?: any;
+  mah?: number;
 }
 
 export interface tableHeadersProps {
@@ -13,13 +14,13 @@ export interface tableHeadersProps {
   width?: number;
 }
 
-const DataTable = ({ header, data, width }: DataTablePrpos) => {
+const DataTable = ({ header, data, width, mah }: DataTablePrpos) => {
   return (
     <Table.ScrollContainer
       minWidth={"100%"}
-      w={width || "calc(100vw - 220px - 24px)"}
+      maw={width || "calc(100vw - 230px - 32px)"}
       type="native"
-      mah={550}
+      mah={mah || 550}
     >
       <Table
         striped
@@ -31,7 +32,7 @@ const DataTable = ({ header, data, width }: DataTablePrpos) => {
       >
         <Table.Thead>
           <Table.Tr>
-            {header.map((headData, headIndex: number) => {
+            {header?.map((headData, headIndex: number) => {
               return <Table.Th key={headIndex}>{headData.label}</Table.Th>;
             })}
           </Table.Tr>
