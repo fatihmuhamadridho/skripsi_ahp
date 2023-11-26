@@ -1,6 +1,6 @@
 import Navbar from "@/components/organisms/Navbar/Navbar";
 import Sidebar from "@/components/organisms/Sidebar/Sidebar";
-import { Container, Flex } from "@mantine/core";
+import { Box, Container, Flex } from "@mantine/core";
 import Head from "next/head";
 import React from "react";
 
@@ -15,15 +15,15 @@ const DefaultTemplate = ({ title, children }: DefaultTemplateProps) => {
       <Head>
         <title>{title}</title>
       </Head>
-      <Container className="overflow-x-hidden" fluid p={0}>
-        <Navbar />
-        <Flex mt={60} direction={"row"}>
-          <Sidebar />
-          <Container w={"100%"} ml={220} fluid p={12} pb={32} mx={0}>
+      <Flex direction={"row"}>
+        <Sidebar />
+        <Box w={"100%"} ml={230}>
+          <Navbar />
+          <Container mt={50} p={16} fluid>
             {children}
           </Container>
-        </Flex>
-      </Container>
+        </Box>
+      </Flex>
     </>
   );
 };

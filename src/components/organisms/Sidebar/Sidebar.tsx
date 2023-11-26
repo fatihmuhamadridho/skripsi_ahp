@@ -1,10 +1,21 @@
 import {
   Accordion,
+  Avatar,
+  Box,
+  Center,
   Container,
+  Divider,
+  Flex,
+  Group,
+  Indicator,
   ScrollArea,
+  Text,
   TextInput,
+  Transition,
   UnstyledButton,
 } from "@mantine/core";
+import { useViewportSize } from "@mantine/hooks";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -23,18 +34,72 @@ const listRoutes: listRouterProps[] = [
     endpoint: "/",
   },
   {
-    title: "Children",
+    title: "Data",
     children: [
       {
-        title: "Dashboard",
+        title: "Data Karyawan",
+        endpoint: "/",
+      },
+      {
+        title: "Data Kriteri",
+        endpoint: "/",
+      },
+      {
+        title: "Data Alternatif",
         endpoint: "/",
       },
     ],
+  },
+  {
+    title: "Proses",
+    children: [
+      {
+        title: "Analisa Kriteria",
+        endpoint: "/",
+      },
+      {
+        title: "Analisa Alternatif",
+        endpoint: "/",
+      },
+      {
+        title: "Entry Nilai Evaluasi",
+        endpoint: "/",
+      },
+    ],
+  },
+  {
+    title: "Hasil",
+    children: [
+      {
+        title: "Ranking",
+        endpoint: "/",
+      },
+      {
+        title: "Laporan",
+        endpoint: "/",
+      },
+    ],
+  },
+  {
+    title: "divider",
+  },
+  {
+    title: "Data Pengguna",
+    endpoint: "/",
+  },
+  {
+    title: "Ubah Password",
+    endpoint: "/",
+  },
+  {
+    title: "Logout",
+    endpoint: "/",
   },
 ];
 
 const Sidebar = () => {
   const router = useRouter();
+  const { height, width } = useViewportSize();
   const [searchInput, setSearchInput] = useState<string>("");
   const [routesExpand, setRoutesExpand] = useState<string[] | undefined>(
     undefined
@@ -70,26 +135,45 @@ const Sidebar = () => {
 
   return (
     <Container
-      className="fixed border-r"
+      className="fixed text-white"
       mx={0}
       pb={60}
       p={0}
-      w={220}
+      w={230}
       h={"100%"}
       mih={"calc(100vh - 60px)"}
-      bg={"white"}
+      bg={"#222D32"}
       fluid
     >
-      <TextInput
-        px={12}
-        py={8}
-        placeholder="Search page here.."
-        onChange={(e) => setSearchInput(e.target.value)}
-        value={searchInput}
-      />
-      <ScrollArea h={"calc(100vh - 110px)"}>
+      <UnstyledButton
+        className="flex items-center justify-center"
+        w={"100%"}
+        h={50}
+        component={Link}
+        href={"/"}
+        bg={"#377FA9"}
+      >
+        <Text fz={24} fw={700}>
+          PT BNG
+        </Text>
+      </UnstyledButton>
+      <Group px={12} h={65}>
+        <Avatar size={45} />
+        <Box>
+          <Text fz={14} lh={"xs"}>
+            Administrator
+          </Text>
+          <Flex ml={4}>
+            <Indicator size={8} position="middle-start" color="green" />
+            <Text fz={14} ml={10} lh={"xs"}>
+              Online
+            </Text>
+          </Flex>
+        </Box>
+      </Group>
+      <ScrollArea h={"calc(100vh - 50px - 65px)"} px={12}>
         {routesExpand && (
-          <Accordion value={routesExpand} multiple>
+          <Accordion value={routesExpand} multiple variant="filled">
             {listRoutes
               .filter((item) =>
                 item.title.toLowerCase().includes(searchInput.toLowerCase())
@@ -98,10 +182,10 @@ const Sidebar = () => {
                 if (routes.endpoint && !routes.children)
                   return (
                     <UnstyledButton
+                      className="!text-[14px]"
                       key={routesIndex}
-                      style={{ borderBottom: "1px solid #dee2e6" }}
                       w={"100%"}
-                      px={16}
+                      px={8}
                       py={12}
                       onClick={() => router.push(routes.endpoint!)}
                     >
@@ -109,9 +193,14 @@ const Sidebar = () => {
                     </UnstyledButton>
                   );
 
+                if (routes.title === "divider") return <Divider my={12} />;
+
                 return (
                   <Accordion.Item key={routesIndex} value={routes.title}>
                     <Accordion.Control
+                      className="!text-white !text-[14px]"
+                      bg={"#222D32"}
+                      px={8}
                       onClick={() => handleExpandMenu(routes.title)}
                     >
                       {routes.title}
@@ -119,8 +208,9 @@ const Sidebar = () => {
                     {routes.children?.map((child, childIndex) => (
                       <Accordion.Panel
                         key={childIndex}
-                        className="cursor-pointer"
-                        pl={16}
+                        className="cursor-pointer !text-[14px]"
+                        bg={"#222D32"}
+                        pl={4}
                         onClick={() => router.push(child.endpoint)}
                       >
                         {child.title}

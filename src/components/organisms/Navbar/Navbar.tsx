@@ -1,56 +1,29 @@
-import {
-  ActionIcon,
-  Button,
-  Container,
-  Group,
-  Indicator,
-  Menu,
-  Text,
-} from "@mantine/core";
-import { IconBell } from "@tabler/icons-react";
+import { Container, Group, Text, UnstyledButton } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconMenu2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
 
 const Navbar = () => {
   const router = useRouter();
-
-  const handleLogout = async () => {
-    router.push("/");
-  };
+  const [, { toggle }] = useDisclosure();
 
   return (
     <Container
-      className="fixed border-b z-50"
-      py={4}
+      className="fixed text-white"
       w={"100%"}
-      h={60}
+      h={50}
       fluid
-      bg={"#fff"}
+      px={16}
+      bg={"#3C8DBC"}
     >
-      <Group h={"100%"} align="center" justify="space-between">
-        <Text
-          className="cursor-pointer"
-          fz={24}
-          fw={700}
-          onClick={() => router.push("/")}
-        >
-          Nextjs Boilerplate
+      <Group h={"100%"} align="center">
+        <UnstyledButton h={"100%"} px={0} onClick={toggle}>
+          <IconMenu2 />
+        </UnstyledButton>
+        <Text fz={24} fw={500}>
+          Home
         </Text>
-        <Group>
-          <ActionIcon variant="white" c={"dark"}>
-            <Indicator position="bottom-end">
-              <IconBell />
-            </Indicator>
-          </ActionIcon>
-          <Menu width={120}>
-            <Menu.Target>
-              <Button variant="default">Admin</Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item onClick={handleLogout}>Logout</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </Group>
       </Group>
     </Container>
   );

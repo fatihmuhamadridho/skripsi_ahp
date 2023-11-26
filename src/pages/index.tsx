@@ -5,11 +5,11 @@ import React from "react";
 const HomePage = () => {
   return (
     <DefaultTemplate title="HomePage">
-      <Paper bg={"dark"} py={12} px={24} radius={8}>
-        <Text fz={24} fw={500} c="#fff">
+      <Paper bg={"white"} py={12} px={24} radius={8}>
+        <Text fz={24} fw={600}>
           Selamat Datang!
         </Text>
-        <Text fz={16} fw={400} c="#fff">
+        <Text fz={16} fw={400}>
           Ini adalah aplikasi untuk memanajemen database
         </Text>
       </Paper>
