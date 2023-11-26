@@ -18,7 +18,7 @@ const DefaultTemplate = ({ title, children }: DefaultTemplateProps) => {
       <Flex direction={"row"}>
         <Sidebar />
         <Box w={"100%"} ml={230}>
-          <Navbar />
+          <Navbar title={title} />
           <Container mt={50} p={16} fluid>
             {children}
           </Container>

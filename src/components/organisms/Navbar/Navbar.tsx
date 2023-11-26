@@ -1,11 +1,13 @@
 import { Container, Group, Text, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconMenu2 } from "@tabler/icons-react";
-import { useRouter } from "next/router";
 import React from "react";
 
-const Navbar = () => {
-  const router = useRouter();
+interface NavbarProps {
+  title?: string;
+}
+
+const Navbar = ({ title }: NavbarProps) => {
   const [, { toggle }] = useDisclosure();
 
   return (
@@ -22,7 +24,7 @@ const Navbar = () => {
           <IconMenu2 />
         </UnstyledButton>
         <Text fz={24} fw={500}>
-          Home
+          {title}
         </Text>
       </Group>
     </Container>

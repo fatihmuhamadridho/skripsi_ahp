@@ -2,7 +2,6 @@ import {
   Accordion,
   Avatar,
   Box,
-  Center,
   Container,
   Divider,
   Flex,
@@ -10,11 +9,18 @@ import {
   Indicator,
   ScrollArea,
   Text,
-  TextInput,
-  Transition,
   UnstyledButton,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
+import {
+  IconChartHistogram,
+  IconDashboard,
+  IconFileFilled,
+  IconLogout2,
+  IconPassword,
+  IconPrinter,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -22,9 +28,11 @@ import React, { useEffect, useState } from "react";
 interface listRouterProps {
   title: string;
   endpoint?: string;
+  icon?: any;
   children?: Array<{
     title: string;
     endpoint: string;
+    icon?: any;
   }>;
 }
 
@@ -32,51 +40,55 @@ const listRoutes: listRouterProps[] = [
   {
     title: "Dashboard",
     endpoint: "/",
+    icon: <IconDashboard size={18} />,
   },
   {
     title: "Data",
+    icon: <IconFileFilled size={18} />,
     children: [
       {
         title: "Data Karyawan",
-        endpoint: "/",
+        endpoint: "/data/data-karyawan",
       },
       {
         title: "Data Kriteri",
-        endpoint: "/",
+        endpoint: "/data/data-kriteria",
       },
       {
         title: "Data Alternatif",
-        endpoint: "/",
+        endpoint: "/data/data-alternatif",
       },
     ],
   },
   {
     title: "Proses",
+    icon: <IconChartHistogram size={18} />,
     children: [
       {
         title: "Analisa Kriteria",
-        endpoint: "/",
+        endpoint: "/proses/analisa-kriteria",
       },
       {
         title: "Analisa Alternatif",
-        endpoint: "/",
+        endpoint: "/proses/analisa-alternatif",
       },
       {
         title: "Entry Nilai Evaluasi",
-        endpoint: "/",
+        endpoint: "/proses/entry-nilai-evaluasi",
       },
     ],
   },
   {
     title: "Hasil",
+    icon: <IconPrinter size={18} />,
     children: [
       {
         title: "Ranking",
-        endpoint: "/",
+        endpoint: "/hasil/ranking",
       },
       {
         title: "Laporan",
-        endpoint: "/",
+        endpoint: "/hasil/laporan",
       },
     ],
   },
@@ -85,15 +97,18 @@ const listRoutes: listRouterProps[] = [
   },
   {
     title: "Data Pengguna",
-    endpoint: "/",
+    endpoint: "/user",
+    icon: <IconUsersGroup size={18} />,
   },
   {
     title: "Ubah Password",
-    endpoint: "/",
+    endpoint: "/change-password",
+    icon: <IconPassword size={18} />,
   },
   {
     title: "Logout",
     endpoint: "/",
+    icon: <IconLogout2 size={18} />,
   },
 ];
 
@@ -189,7 +204,10 @@ const Sidebar = () => {
                       py={12}
                       onClick={() => router.push(routes.endpoint!)}
                     >
-                      {routes.title}
+                      <Flex gap={8} align={"center"}>
+                        {routes.icon}
+                        <Text fz={14}>{routes.title}</Text>
+                      </Flex>
                     </UnstyledButton>
                   );
 
@@ -198,19 +216,22 @@ const Sidebar = () => {
                 return (
                   <Accordion.Item key={routesIndex} value={routes.title}>
                     <Accordion.Control
-                      className="!text-white !text-[14px]"
+                      className="!text-white"
                       bg={"#222D32"}
                       px={8}
                       onClick={() => handleExpandMenu(routes.title)}
                     >
-                      {routes.title}
+                      <Flex gap={8} align={"center"}>
+                        {routes.icon}
+                        <Text fz={14}>{routes.title}</Text>
+                      </Flex>
                     </Accordion.Control>
                     {routes.children?.map((child, childIndex) => (
                       <Accordion.Panel
                         key={childIndex}
                         className="cursor-pointer !text-[14px]"
                         bg={"#222D32"}
-                        pl={4}
+                        pl={16}
                         onClick={() => router.push(child.endpoint)}
                       >
                         {child.title}
