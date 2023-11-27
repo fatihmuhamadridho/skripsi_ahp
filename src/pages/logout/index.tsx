@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 const LogoutPage = () => {
   const router = useRouter();
   useEffect(() => {
-    router.push("/");
+    router.push("/login");
   }, [router]);
   return <DefaultTemplate title="LogoutPage" />;
 };

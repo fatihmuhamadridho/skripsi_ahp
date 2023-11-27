@@ -1,0 +1,28 @@
+###
+GET http://localhost:3000/api/user?
+
+###
+GET http://localhost:3000/api/user/1
+
+###
+POST http://localhost:3000/api/user
+Content-Type: application/json
+
+{
+    "fullname": "superadmin",
+    "username": "superadmin",
+    "password": "superadmin"
+}
+
+###
+PUT http://localhost:3000/api/user/1
+Content-Type: application/json
+
+{
+    "fullname": "superadmin1",
+    "username": "superadmin1",
+    "password": "superadmin1"
+}
+
+###
+DELETE  http://localhost:3000/api/user/1
