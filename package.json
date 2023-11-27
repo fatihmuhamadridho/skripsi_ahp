@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && prisma db push",
     "start": "next start",
     "lint": "next lint",
-    "database-migrate": "prisma migrate dev",
+    "database-push": "prisma db push",
+    "database-migrate": "prisma migrate dev --preview-feature",
     "database-reset": "prisma migrate reset && ts-node ./server/routes/reset.routes.ts",
     "database-delete-migration": "rm -rf ./prisma/migrations"
   },
