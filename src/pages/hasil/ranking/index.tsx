@@ -16,9 +16,22 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 import React from "react";
 
 const RankingPage = () => {
+  const router = useRouter();
+
+  const handleDetail = () => {
+    router.push("/hasil/ranking/1");
+  };
+
+  const renderAksi = () => (
+    <Button color="green" onClick={handleDetail}>
+      Lihat Hasil
+    </Button>
+  );
+
   const listHeader: tableHeadersProps[] = [
     {
       label: "No",
@@ -28,6 +41,17 @@ const RankingPage = () => {
     {
       label: "Periode",
       key: "periode",
+      width: 200,
+    },
+    {
+      label: "Kategori Kriteria",
+      key: "periode",
+      width: 200,
+    },
+    {
+      label: "Aksi",
+      key: renderAksi,
+      width: 150,
     },
   ];
   const data = [
@@ -46,10 +70,6 @@ const RankingPage = () => {
     <DefaultTemplate title="RankingPage">
       <Paper p={16}>
         <Stack>
-          <Box>
-            <Button variant="default">Tambah Data</Button>
-          </Box>
-          <Divider />
           <Group justify="space-between">
             <Flex align={"center"} gap={12}>
               <Text fz={12}>Cari :</Text>

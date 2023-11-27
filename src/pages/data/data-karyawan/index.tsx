@@ -1,6 +1,7 @@
 import DataTable, {
   tableHeadersProps,
 } from "@/components/atoms/DataTable/DataTable";
+import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
 import {
   Box,
@@ -16,9 +17,25 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 import React from "react";
 
 const DataKaryawan = () => {
+  const router = useRouter();
+
+  const handleEdit = () => {
+    router.push("/data/data-karyawan/edit-data-karyawan/1");
+  };
+
+  const renderAksi = () => (
+    <Flex gap={12}>
+      <Button color="green" onClick={handleEdit}>
+        Ubah
+      </Button>
+      <ModalDelete onClick={() => console.log("test")} />
+    </Flex>
+  );
+
   const listHeader: tableHeadersProps[] = [
     {
       label: "No",
@@ -40,10 +57,17 @@ const DataKaryawan = () => {
     {
       label: "No. Telp",
       key: "handphone",
+      width: 150,
     },
     {
       label: "Alamat",
       key: "address",
+      width: 200,
+    },
+    {
+      label: "Aksi",
+      key: renderAksi,
+      width: 200,
     },
   ];
   const data = [
@@ -255,7 +279,14 @@ const DataKaryawan = () => {
       <Paper p={16}>
         <Stack>
           <Box>
-            <Button variant="default">Tambah Data</Button>
+            <Button
+              variant="default"
+              onClick={() =>
+                router.push("/data/data-karyawan/tambah-data-karyawan")
+              }
+            >
+              Tambah Data
+            </Button>
           </Box>
           <Divider />
           <Group justify="space-between">

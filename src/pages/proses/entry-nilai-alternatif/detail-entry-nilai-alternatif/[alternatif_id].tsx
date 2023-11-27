@@ -1,11 +1,9 @@
-import DataTable, {
-  tableHeadersProps,
-} from "@/components/atoms/DataTable/DataTable";
 import DefaultTemplate from "@/components/templates/Default/Default";
 import {
   Box,
   Button,
   Divider,
+  Fieldset,
   Flex,
   Group,
   NativeSelect,
@@ -15,10 +13,22 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
 import React from "react";
+import { MonthPickerInput } from "@mantine/dates";
+import DataTable, {
+  tableHeadersProps,
+} from "@/components/atoms/DataTable/DataTable";
+import { IconChevronLeft, IconSearch } from "@tabler/icons-react";
+import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
+import { useRouter } from "next/router";
 
-const AnalisaKriteria = () => {
+const TambahEntryNilaiAlternatif = () => {
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.back();
+  };
+
   const listHeader: tableHeadersProps[] = [
     {
       label: "No",
@@ -26,28 +36,46 @@ const AnalisaKriteria = () => {
       width: 30,
     },
     {
-      label: "Periode",
-      key: "periode",
-    },
-  ];
-  const data = [
-    {
-      periode: "Oktober 2023",
+      label: "Nama",
+      key: "index",
     },
     {
-      periode: "November 2023",
+      label: "Absensi",
+      key: "index",
     },
     {
-      periode: "Desember 2023",
+      label: "Kerja Sama",
+      key: "index",
+    },
+    {
+      label: "Produktivitas",
+      key: "index",
     },
   ];
 
+  const data = [1, 2, 3];
+
   return (
-    <DefaultTemplate title="AnalisaKriteria">
+    <DefaultTemplate title="TambahEntryNilaiAlternatif">
       <Paper p={16}>
         <Stack>
+          <Group justify="space-between">
+            <Button
+              color="gray"
+              leftSection={<IconChevronLeft />}
+              onClick={handleBack}
+            >
+              Kembali
+            </Button>
+            <Group>
+              <Button color="green">Ubah</Button>
+              <ModalDelete onClick={() => console.log("test")} />
+            </Group>
+          </Group>
+          <Divider />
           <Box>
-            <Button variant="default">Tambah Data</Button>
+            <Text>Periode : Oktober 2023</Text>
+            <Text>Kategory Kriteria : Karyawan Terbaik Oktober 2023</Text>
           </Box>
           <Divider />
           <Group justify="space-between">
@@ -80,4 +108,4 @@ const AnalisaKriteria = () => {
   );
 };
 
-export default AnalisaKriteria;
+export default TambahEntryNilaiAlternatif;

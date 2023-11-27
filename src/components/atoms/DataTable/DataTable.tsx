@@ -30,7 +30,7 @@ const DataTable = ({ header, data, width, mah }: DataTablePrpos) => {
         withTableBorder
         withColumnBorders
       >
-        <Table.Thead>
+        <Table.Thead className="z-[5]">
           <Table.Tr>
             {header?.map((headData, headIndex: number) => {
               return <Table.Th key={headIndex}>{headData.label}</Table.Th>;

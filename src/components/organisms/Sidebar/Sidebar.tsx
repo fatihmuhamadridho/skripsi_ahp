@@ -55,8 +55,8 @@ const listRoutes: listRouterProps[] = [
         endpoint: "/data/data-kriteria",
       },
       {
-        title: "Data Alternatif",
-        endpoint: "/data/data-alternatif",
+        title: "Data Sub Kriteria",
+        endpoint: "/data/data-subkriteria",
       },
     ],
   },
@@ -65,16 +65,16 @@ const listRoutes: listRouterProps[] = [
     icon: <IconChartHistogram size={18} />,
     children: [
       {
-        title: "Analisa Kriteria",
-        endpoint: "/proses/analisa-kriteria",
+        title: "Entry Nilai Kriteria",
+        endpoint: "/proses/entry-nilai-kriteria",
       },
       {
-        title: "Analisa Alternatif",
-        endpoint: "/proses/analisa-alternatif",
+        title: "Entry Nilai Sub Kriteria",
+        endpoint: "/proses/entry-nilai-subkriteria",
       },
       {
-        title: "Entry Nilai Evaluasi",
-        endpoint: "/proses/entry-nilai-evaluasi",
+        title: "Entry Nilai Alternatif",
+        endpoint: "/proses/entry-nilai-alternatif",
       },
     ],
   },
@@ -147,8 +147,6 @@ const Sidebar = () => {
       setRoutesExpand(deleteMenu);
     }
   };
-
-  console.log({ pathname: router.pathname.split("/") });
 
   return (
     <Container

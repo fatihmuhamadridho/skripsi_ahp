@@ -1,6 +1,7 @@
 import DataTable, {
   tableHeadersProps,
 } from "@/components/atoms/DataTable/DataTable";
+import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
 import {
   Box,
@@ -16,9 +17,36 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 import React from "react";
 
-const LaporanPage = () => {
+const EntryNilaiSubkriteria = () => {
+  const router = useRouter();
+
+  const handleDetail = () => {
+    router.push(
+      "/proses/entry-nilai-subkriteria/detail-entry-nilai-subkriteria/1"
+    );
+  };
+
+  const handleEdit = () => {
+    router.push(
+      "/proses/entry-nilai-subkriteria/edit-entry-nilai-subkriteria/1"
+    );
+  };
+
+  const renderAksi = () => (
+    <Flex gap={12}>
+      <Button color="blue" onClick={handleDetail}>
+        Detail
+      </Button>
+      <Button color="green" onClick={handleEdit}>
+        Ubah
+      </Button>
+      <ModalDelete onClick={() => console.log("test")} />
+    </Flex>
+  );
+
   const listHeader: tableHeadersProps[] = [
     {
       label: "No",
@@ -28,8 +56,20 @@ const LaporanPage = () => {
     {
       label: "Periode",
       key: "periode",
+      width: 250,
+    },
+    {
+      label: "Kategori Kriteria",
+      key: "index",
+      width: 250,
+    },
+    {
+      label: "Aksi",
+      key: renderAksi,
+      width: 300,
     },
   ];
+
   const data = [
     {
       periode: "Oktober 2023",
@@ -43,9 +83,22 @@ const LaporanPage = () => {
   ];
 
   return (
-    <DefaultTemplate title="LaporanPage">
+    <DefaultTemplate title="EntryNilaiSubkriteria">
       <Paper p={16}>
         <Stack>
+          <Box>
+            <Button
+              variant="default"
+              onClick={() =>
+                router.push(
+                  "/proses/entry-nilai-subkriteria/tambah-entry-nilai-subkriteria"
+                )
+              }
+            >
+              Tambah Data
+            </Button>
+          </Box>
+          <Divider />
           <Group justify="space-between">
             <Flex align={"center"} gap={12}>
               <Text fz={12}>Cari :</Text>
@@ -76,4 +129,4 @@ const LaporanPage = () => {
   );
 };
 
-export default LaporanPage;
+export default EntryNilaiSubkriteria;

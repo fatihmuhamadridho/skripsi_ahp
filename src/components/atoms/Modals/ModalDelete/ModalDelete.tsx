@@ -31,7 +31,9 @@ const ModalDelete = ({ onClick }: ModalDeleteProps) => {
           </Group>
         </Stack>
       </Modal>
-      <IconTrash className="cursor-pointer" onClick={open} />
+      <Button onClick={open} color="red">
+        Delete
+      </Button>
     </>
   );
 };

@@ -1,6 +1,7 @@
 import DataTable, {
   tableHeadersProps,
 } from "@/components/atoms/DataTable/DataTable";
+import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
 import {
   Box,
@@ -16,9 +17,25 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 import React from "react";
 
 const DataKriteria = () => {
+  const router = useRouter();
+
+  const handleEdit = () => {
+    router.push("/data/data-kriteria/edit-data-kriteria/1");
+  };
+
+  const renderAksi = () => (
+    <Flex gap={12}>
+      <Button color="green" onClick={handleEdit}>
+        Ubah
+      </Button>
+      <ModalDelete onClick={() => console.log("test")} />
+    </Flex>
+  );
+
   const listHeader: tableHeadersProps[] = [
     {
       label: "No",
@@ -28,8 +45,15 @@ const DataKriteria = () => {
     {
       label: "Nama Kriteria",
       key: "name",
+      width: 250,
+    },
+    {
+      label: "Aksi",
+      key: renderAksi,
+      width: 200,
     },
   ];
+
   const data = [
     {
       name: "Absensi",
@@ -47,7 +71,14 @@ const DataKriteria = () => {
       <Paper p={16}>
         <Stack>
           <Box>
-            <Button variant="default">Tambah Data</Button>
+            <Button
+              variant="default"
+              onClick={() =>
+                router.push("/data/data-kriteria/tambah-data-kriteria")
+              }
+            >
+              Tambah Data
+            </Button>
           </Box>
           <Divider />
           <Group justify="space-between">

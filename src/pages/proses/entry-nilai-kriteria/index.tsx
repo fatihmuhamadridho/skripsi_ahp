@@ -1,6 +1,7 @@
 import DataTable, {
   tableHeadersProps,
 } from "@/components/atoms/DataTable/DataTable";
+import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
 import {
   Box,
@@ -16,9 +17,32 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 import React from "react";
 
-const AnalisaAlternatif = () => {
+const EntryNilaiKriteria = () => {
+  const router = useRouter();
+
+  const handleDetail = () => {
+    router.push("/proses/entry-nilai-kriteria/detail-entry-nilai-kriteria/1");
+  };
+
+  const handleEdit = () => {
+    router.push("/proses/entry-nilai-kriteria/edit-entry-nilai-kriteria/1");
+  };
+
+  const renderAksi = () => (
+    <Flex gap={12}>
+      <Button color="blue" onClick={handleDetail}>
+        Detail
+      </Button>
+      <Button color="green" onClick={handleEdit}>
+        Ubah
+      </Button>
+      <ModalDelete onClick={() => console.log("test")} />
+    </Flex>
+  );
+
   const listHeader: tableHeadersProps[] = [
     {
       label: "No",
@@ -28,26 +52,50 @@ const AnalisaAlternatif = () => {
     {
       label: "Periode",
       key: "periode",
+      width: 200,
+    },
+    {
+      label: "Nama",
+      key: "name",
+      width: 250,
+    },
+    {
+      label: "Aksi",
+      key: renderAksi,
+      width: 300,
     },
   ];
+
   const data = [
     {
       periode: "Oktober 2023",
+      name: "Karyawan Terbaik Oktober 2023",
     },
     {
       periode: "November 2023",
+      name: "Karyawan Terbaik November 2023",
     },
     {
       periode: "Desember 2023",
+      name: "Karyawan Terbaik Desember 2023",
     },
   ];
 
   return (
-    <DefaultTemplate title="AnalisaAlternatif">
+    <DefaultTemplate title="EntryNilaiKriteria">
       <Paper p={16}>
         <Stack>
           <Box>
-            <Button variant="default">Tambah Data</Button>
+            <Button
+              variant="default"
+              onClick={() =>
+                router.push(
+                  "/proses/entry-nilai-kriteria/tambah-entry-nilai-kriteria"
+                )
+              }
+            >
+              Tambah Data
+            </Button>
           </Box>
           <Divider />
           <Group justify="space-between">
@@ -80,4 +128,4 @@ const AnalisaAlternatif = () => {
   );
 };
 
-export default AnalisaAlternatif;
+export default EntryNilaiKriteria;

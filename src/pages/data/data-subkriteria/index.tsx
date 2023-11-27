@@ -1,6 +1,7 @@
 import DataTable, {
   tableHeadersProps,
 } from "@/components/atoms/DataTable/DataTable";
+import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
 import {
   Box,
@@ -17,9 +18,25 @@ import {
   TextInput,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 import React from "react";
 
-const DataAlternatif = () => {
+const DataSubkriteria = () => {
+  const router = useRouter();
+
+  const handleEdit = () => {
+    router.push("/data/data-subkriteria/edit-data-subkriteria/1");
+  };
+
+  const renderAksi = () => (
+    <Flex gap={12}>
+      <Button color="green" onClick={handleEdit}>
+        Ubah
+      </Button>
+      <ModalDelete onClick={() => console.log("test")} />
+    </Flex>
+  );
+
   const listHeader: tableHeadersProps[] = [
     {
       label: "No",
@@ -29,10 +46,17 @@ const DataAlternatif = () => {
     {
       label: "Nama Alternatif",
       key: "name",
+      width: 200,
     },
     {
       label: "Nama Kriteria",
       key: "kriteria_name",
+      width: 200,
+    },
+    {
+      label: "Aksi",
+      key: renderAksi,
+      width: 200,
     },
   ];
   const data = [
@@ -51,7 +75,7 @@ const DataAlternatif = () => {
   ];
 
   return (
-    <DefaultTemplate title="DataAlternatif">
+    <DefaultTemplate title="DataSubkriteria">
       <Paper p={16}>
         <Stack>
           <Box>
@@ -97,4 +121,4 @@ const DataAlternatif = () => {
   );
 };
 
-export default DataAlternatif;
+export default DataSubkriteria;
