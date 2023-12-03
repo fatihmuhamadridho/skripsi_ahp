@@ -1,12 +1,22 @@
 import { createRouter } from "next-connect";
 import { NextApiRequest, NextApiResponse } from "next";
-import { ResetController } from "../controllers/reset.controller";
+import { KriteriaController } from "../../controllers/kriteria.controller";
 
 const router = createRouter<NextApiRequest, NextApiResponse>();
 
 router.get(async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const response = await ResetController.main();
+    const response = await KriteriaController.getAll();
+    res.status(200).json(response);
+  } catch (error: any) {
+    res.status(500).json({ status: false, error: error.stack });
+  }
+});
+
+router.post(async (req: NextApiRequest, res: NextApiResponse) => {
+  const { name } = req.body;
+  try {
+    const response = await KriteriaController.postKriteria({ name });
     res.status(200).json(response);
   } catch (error: any) {
     res.status(500).json({ status: false, error: error.stack });

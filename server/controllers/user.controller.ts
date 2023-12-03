@@ -1,5 +1,6 @@
 import { ResponseController } from "./response.controller";
 import { PrismaClient } from "@prisma/client";
+import type { User } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -9,11 +10,10 @@ interface queryProps {
   limit?: number;
 }
 
-export interface UserModelProps {
+export interface UserProps
+  extends Omit<User, "user_id" | "access_token" | "first_login"> {
   user_id?: number;
-  fullname: string;
-  username: string;
-  password: string;
+  access_token?: string;
   first_login?: boolean;
 }
 
@@ -27,16 +27,23 @@ export class UserController {
     };
   }
   static async getOne(user_id: number) {
-    const response = await prisma.user.findFirst({ where: { user_id } });
+    const response = await prisma.user.findUniqueOrThrow({
+      where: { user_id },
+    });
     return {
       status: true,
       message: ResponseController.message.SUCCESS_GET_DATA,
       data: response,
     };
   }
-  static async postUser({ fullname, username, password }: UserModelProps) {
+  static async postUser({
+    fullname,
+    username,
+    password,
+    access_token,
+  }: UserProps) {
     const response = await prisma.user.create({
-      data: { fullname, username, password, first_login: true },
+      data: { fullname, username, password, access_token, first_login: true },
     });
     return {
       status: true,
@@ -46,11 +53,11 @@ export class UserController {
   }
   static async putUser(
     user_id: number,
-    { fullname, username, password }: UserModelProps
+    { fullname, username, password, access_token, first_login }: UserProps
   ) {
     const response = await prisma.user.update({
       where: { user_id },
-      data: { fullname, username, password, first_login: true },
+      data: { fullname, username, password, access_token, first_login },
     });
     return {
       status: true,

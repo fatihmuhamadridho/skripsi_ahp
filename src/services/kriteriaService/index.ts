@@ -8,20 +8,20 @@ const apiClient = axios.create({
   },
 });
 
-export class MockService {
+export class KriteriaService {
   static ApiEndpoint = {
-    mock: "/mock",
+    kriteria: "/kriteria",
   };
 
   static getAll() {
-    return apiClient.get(this.ApiEndpoint.mock);
+    return apiClient.get(this.ApiEndpoint.kriteria);
   }
 }
 
-export const useGetAllmock = () => {
+export const useGetAllKriteria = () => {
   const { data, status, isFetching } = useQuery({
-    key: ["useGetAllmock"],
-    fetchAction: async () => MockService.getAll(),
+    key: ["useGetAllKriteria"],
+    fetchAction: async () => KriteriaService.getAll(),
     select: (data: any) => data.data.data,
   });
 

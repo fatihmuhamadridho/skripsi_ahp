@@ -3,6 +3,7 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
+import { useGetAllKriteria } from "@/services/kriteriaService";
 import {
   Box,
   Button,
@@ -19,9 +20,11 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
+import { KriteriaProps } from "../../../../server/controllers/kriteria.controller";
 
 const DataKriteria = () => {
   const router = useRouter();
+  const { data: listKriteria }: { data: KriteriaProps[] } = useGetAllKriteria();
 
   const handleEdit = () => {
     router.push("/data/data-kriteria/edit-data-kriteria/1");
@@ -51,18 +54,6 @@ const DataKriteria = () => {
       label: "Aksi",
       key: renderAksi,
       width: 200,
-    },
-  ];
-
-  const data = [
-    {
-      name: "Absensi",
-    },
-    {
-      name: "Bekerja Sama",
-    },
-    {
-      name: "Produktivitas",
     },
   ];
 
@@ -99,7 +90,7 @@ const DataKriteria = () => {
             width={"calc(100vw - 230px - 32px - 32px)"}
             mah={480}
             header={listHeader}
-            data={data}
+            data={listKriteria}
           />
           <Group align="center" justify="space-between">
             <Text fz={12}>Menampilkan 1 s/d 3 dari 3 data</Text>

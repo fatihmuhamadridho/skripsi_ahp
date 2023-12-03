@@ -1,0 +1,86 @@
+{
+  "karyawan": [
+    {
+      "karyawan_id": 1,
+      "fullname": "Fatih Muhamad Ridho",
+      "jabatan": "Frontend Developer"
+    },
+    {
+      "karyawan_id": 2,
+      "fullname": "Tirta Puspitasari",
+      "jabatan": "Frontend Developer"
+    }
+  ],
+  "kriteria": [
+    {
+      "kriteria_id": 1,
+      "name": "Absensi",
+      "bobot": [{ "periode": "102023", "value": 1 }]
+    },
+    {
+      "kriteria_id": 2,
+      "name": "Kerja Sama",
+      "bobot": [{ "periode": "102023", "value": 3 }]
+    }
+  ],
+  "subkriteria": [
+    {
+      "subkriteria_id": 1,
+      "kriteria_id": 1,
+      "name": "Kurang dari 15 hari",
+      "bobot": [{ "periode": "102023", "value": 1 }]
+    },
+    {
+      "subkriteria_id": 2,
+      "kriteria_id": 1,
+      "name": "15 s/d 20 hari",
+      "bobot": [{ "periode": "102023", "value": 3 }]
+    },
+    {
+      "subkriteria_id": 3,
+      "kriteria_id": 2,
+      "name": "Kurang baik",
+      "bobot": [{ "periode": "102023", "value": 1 }]
+    },
+    {
+      "subkriteria_id": 4,
+      "kriteria_id": 2,
+      "name": "Cukup baik",
+      "bobot": [{ "periode": "102023", "value": 3 }]
+    }
+  ],
+  "nilai_alternatif": [
+    {
+      "nilai_anternatif_id": 1,
+      "karyawan_id": 1,
+      "name": "Karyawan Terbaik Oktober 2023",
+      "periode": "102023",
+      "bobot": [
+        {
+          "kriteria_id": 1,
+          "subkriteria_id": 1
+        },
+        {
+          "kriteria_id": 2,
+          "subkriteria_id": 1
+        }
+      ]
+    },
+    {
+      "nilai_anternatif_id": 2,
+      "karyawan_id": 2,
+      "name": "Karyawan Terbaik Oktober 2023",
+      "periode": "102023",
+      "bobot": [
+        {
+          "kriteria_id": 1,
+          "subkriteria_id": 2
+        },
+        {
+          "kriteria_id": 2,
+          "subkriteria_id": 2
+        }
+      ]
+    }
+  ]
+}

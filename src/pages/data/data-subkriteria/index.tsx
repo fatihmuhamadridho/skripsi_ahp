@@ -3,6 +3,7 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
+import { useGetAllSubkriteria } from "@/services/subkriteriaService";
 import {
   Box,
   Button,
@@ -20,9 +21,12 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
+import { SubkriteriaProps } from "../../../../server/controllers/subkriteria.controller";
 
 const DataSubkriteria = () => {
   const router = useRouter();
+  const { data: listSubkriteria }: { data: SubkriteriaProps[] } =
+    useGetAllSubkriteria();
 
   const handleEdit = () => {
     router.push("/data/data-subkriteria/edit-data-subkriteria/1");
@@ -57,20 +61,6 @@ const DataSubkriteria = () => {
       label: "Aksi",
       key: renderAksi,
       width: 200,
-    },
-  ];
-  const data = [
-    {
-      name: "<15 hari",
-      kriteria_name: "Absensi",
-    },
-    {
-      name: "15-20 hari",
-      kriteria_name: "Absensi",
-    },
-    {
-      name: ">20 hari",
-      kriteria_name: "Absensi",
     },
   ];
 
@@ -109,7 +99,7 @@ const DataSubkriteria = () => {
             width={"calc(100vw - 230px - 32px - 32px)"}
             mah={480}
             header={listHeader}
-            data={data}
+            data={listSubkriteria}
           />
           <Group align="center" justify="space-between">
             <Text fz={12}>Menampilkan 1 s/d 3 dari 3 data</Text>

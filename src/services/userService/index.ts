@@ -8,20 +8,20 @@ const apiClient = axios.create({
   },
 });
 
-export class MockService {
+export class UserSevice {
   static ApiEndpoint = {
-    mock: "/mock",
+    user: "/user",
   };
 
   static getAll() {
-    return apiClient.get(this.ApiEndpoint.mock);
+    return apiClient.get(this.ApiEndpoint.user);
   }
 }
 
-export const useGetAllmock = () => {
+export const useGetAllUser = () => {
   const { data, status, isFetching } = useQuery({
-    key: ["useGetAllmock"],
-    fetchAction: async () => MockService.getAll(),
+    key: ["useGetAllUser"],
+    fetchAction: async () => UserSevice.getAll(),
     select: (data: any) => data.data.data,
   });
 

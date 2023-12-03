@@ -2,6 +2,7 @@ import DataTable, {
   tableHeadersProps,
 } from "@/components/atoms/DataTable/DataTable";
 import DefaultTemplate from "@/components/templates/Default/Default";
+import { useGetAllUser } from "@/services/userService";
 import {
   Box,
   Button,
@@ -17,9 +18,31 @@ import {
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import React from "react";
+import { UserModelProps } from "../../../server/controllers/user.controller";
+import { useRouter } from "next/router";
+import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 
 const UserPage = () => {
-  const data = [1, 2, 3];
+  const router = useRouter();
+  const { data: listUser }: { data: UserModelProps[] } = useGetAllUser();
+
+  const handleAdd = () => {
+    router.push("/user/tambah-user");
+  };
+
+  const handleEdit = () => {
+    router.push("/user/edit-user/1");
+  };
+
+  const renderAksi = () => (
+    <Flex gap={12}>
+      <Button color="green" onClick={handleEdit}>
+        Ubah
+      </Button>
+      <ModalDelete onClick={() => console.log("test")} />
+    </Flex>
+  );
+
   const listHeader: tableHeadersProps[] = [
     {
       label: "No",
@@ -27,11 +50,15 @@ const UserPage = () => {
     },
     {
       label: "Nama Lengkap",
-      key: "index",
+      key: "fullname",
     },
     {
       label: "Username",
-      key: "index",
+      key: "username",
+    },
+    {
+      label: "Aksi",
+      key: renderAksi,
     },
   ];
 
@@ -40,7 +67,9 @@ const UserPage = () => {
       <Paper p={16}>
         <Stack>
           <Box>
-            <Button variant="default">Tambah Data</Button>
+            <Button variant="default" onClick={handleAdd}>
+              Tambah Data
+            </Button>
           </Box>
           <Divider />
           <Group justify="space-between">
@@ -61,7 +90,7 @@ const UserPage = () => {
             width={"calc(100vw - 230px - 32px - 32px)"}
             mah={480}
             header={listHeader}
-            data={data}
+            data={listUser}
           />
           <Group align="center" justify="space-between">
             <Text fz={12}>Menampilkan 1 s/d 3 dari 3 data</Text>

@@ -8,9 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "database-push": "prisma db push",
-    "database-migrate": "prisma migrate dev --preview-feature",
-    "database-reset": "prisma migrate reset && ts-node ./server/routes/reset.routes.ts",
-    "database-delete-migration": "rm -rf ./prisma/migrations"
+    "database-migrate": "prisma migrate dev",
+    "database-reset": "prisma db push --force-reset && node ./server/libs/reset.js",
+    "database-reset-migration": "rm -rf ./prisma/migrations",
+    "database-mock": "node ./server/libs/mock.js"
   },
   "dependencies": {
     "@mantine/core": "^7.2.2",

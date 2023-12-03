@@ -3,6 +3,7 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
+import { useGetAllKaryawan } from "@/services/karyawanService";
 import {
   Box,
   Button,
@@ -19,15 +20,23 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
+import { KaryawanProps } from "../../../../server/controllers/karyawan.controller";
 
 const DataKaryawan = () => {
   const router = useRouter();
+  const { data: listKaryawan }: { data: KaryawanProps[] } = useGetAllKaryawan();
 
   const handleEdit = () => {
     router.push("/data/data-karyawan/edit-data-karyawan/1");
   };
 
-  const renderAksi = () => (
+  const renderTTL = (values: KaryawanProps) => (
+    <Text>
+      {values.birth_place} + {String(values?.birth_date)}
+    </Text>
+  );
+
+  const renderAksi = (values: KaryawanProps) => (
     <Flex gap={12}>
       <Button color="green" onClick={handleEdit}>
         Ubah
@@ -52,7 +61,7 @@ const DataKaryawan = () => {
     },
     {
       label: "Tempat, Tanggal Lahir",
-      key: "ttl",
+      key: renderTTL,
     },
     {
       label: "No. Telp",
@@ -68,209 +77,6 @@ const DataKaryawan = () => {
       label: "Aksi",
       key: renderAksi,
       width: 200,
-    },
-  ];
-  const data = [
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
-    },
-    {
-      fullname: "Fatih Muhamad Ridho",
-      gender: "laki-laki",
-      ttl: "Tangerang, 03 Oktober 2001",
-      handphone: "+6282110797472",
-      address:
-        "Jl. H. Djiran No 08 RT 003/RW 001, Kec. Pinang, Kel. Pinang, Kota Tangerang (15145)",
     },
   ];
 
@@ -307,7 +113,7 @@ const DataKaryawan = () => {
             width={"calc(100vw - 230px - 32px - 32px)"}
             mah={480}
             header={listHeader}
-            data={data}
+            data={listKaryawan}
           />
           <Group align="center" justify="space-between">
             <Text fz={12}>Menampilkan 1 s/d 3 dari 3 data</Text>
