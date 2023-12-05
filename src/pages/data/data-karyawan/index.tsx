@@ -3,7 +3,7 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
-import { useGetAllKaryawan } from "@/services/karyawanService";
+import { KaryawanService, useGetAllKaryawan } from "@/services/karyawanService";
 import {
   Box,
   Button,
@@ -20,28 +20,42 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import { KaryawanProps } from "../../../../server/controllers/karyawan.controller";
+import { useQueryClient } from "react-query";
 
 const DataKaryawan = () => {
   const router = useRouter();
-  const { data: listKaryawan }: { data: KaryawanProps[] } = useGetAllKaryawan();
+  const queryClient = useQueryClient();
+  const { data: listKaryawan }: { data: any[] } = useGetAllKaryawan();
 
-  const handleEdit = () => {
-    router.push("/data/data-karyawan/edit-data-karyawan/1");
+  const handleEdit = (karyawan_id: number) => {
+    router.push("/data/data-karyawan/edit-data-karyawan" + `/${karyawan_id}`);
   };
 
-  const renderTTL = (values: KaryawanProps) => (
+  const handleDeleteData = async (karyawan_id: number) => {
+    try {
+      const response = await KaryawanService.deleteKaryawan(karyawan_id);
+      if (response?.status === 200) {
+        await queryClient.invalidateQueries(["useGetAllKaryawan"]);
+        alert("Berhasil handleDeleteData!");
+        // router.push("/data/data-karyawan");
+      }
+    } catch (error: any) {
+      alert(error.stack);
+    }
+  };
+
+  const renderTTL = (values: any) => (
     <Text>
       {values.birth_place} + {String(values?.birth_date)}
     </Text>
   );
 
-  const renderAksi = (values: KaryawanProps) => (
+  const renderAksi = (values: any) => (
     <Flex gap={12}>
-      <Button color="green" onClick={handleEdit}>
+      <Button color="green" onClick={() => handleEdit(values.karyawan_id)}>
         Ubah
       </Button>
-      <ModalDelete onClick={() => console.log("test")} />
+      <ModalDelete onClick={() => handleDeleteData(values.karyawan_id)} />
     </Flex>
   );
 

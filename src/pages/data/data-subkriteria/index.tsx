@@ -3,7 +3,10 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
-import { useGetAllSubkriteria } from "@/services/subkriteriaService";
+import {
+  SubkriteriaService,
+  useGetAllSubkriteria,
+} from "@/services/subkriteriaService";
 import {
   Box,
   Button,
@@ -21,23 +24,42 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import { SubkriteriaProps } from "../../../../server/controllers/subkriteria.controller";
+import { useQueryClient } from "react-query";
 
 const DataSubkriteria = () => {
   const router = useRouter();
-  const { data: listSubkriteria }: { data: SubkriteriaProps[] } =
-    useGetAllSubkriteria();
+  const queryClient = useQueryClient();
+  const { data: listSubkriteria }: { data: any[] } = useGetAllSubkriteria();
 
-  const handleEdit = () => {
-    router.push("/data/data-subkriteria/edit-data-subkriteria/1");
+  const handleEdit = (subkriteria_id: number) => {
+    router.push(
+      "/data/data-subkriteria/edit-data-subkriteria" + `/${subkriteria_id}`
+    );
   };
 
-  const renderAksi = () => (
+  const handleDeleteData = async (subkriteria_id: number) => {
+    try {
+      const response = await SubkriteriaService.deleteSubkriteria(
+        subkriteria_id
+      );
+      if (response?.status === 200) {
+        await queryClient.invalidateQueries(["useGetAllSubkriteria"]);
+        alert("Berhasil handleDeleteData!");
+        // router.push("/data/data-karyawan");
+      }
+    } catch (error: any) {
+      alert(error.stack);
+    }
+  };
+
+  const renderKriteria = (values: any) => <Text>{values?.Kriteria?.name}</Text>;
+
+  const renderAksi = (values: any) => (
     <Flex gap={12}>
-      <Button color="green" onClick={handleEdit}>
+      <Button color="green" onClick={() => handleEdit(values.subkriteria_id)}>
         Ubah
       </Button>
-      <ModalDelete onClick={() => console.log("test")} />
+      <ModalDelete onClick={() => handleDeleteData(values.subkriteria_id)} />
     </Flex>
   );
 
@@ -54,7 +76,7 @@ const DataSubkriteria = () => {
     },
     {
       label: "Nama Kriteria",
-      key: "kriteria_name",
+      key: renderKriteria,
       width: 200,
     },
     {
@@ -69,7 +91,14 @@ const DataSubkriteria = () => {
       <Paper p={16}>
         <Stack>
           <Box>
-            <Button variant="default">Tambah Data</Button>
+            <Button
+              variant="default"
+              onClick={() =>
+                router.push("/data/data-subkriteria/tambah-data-subkriteria")
+              }
+            >
+              Tambah Data
+            </Button>
           </Box>
           <Divider />
           <Group justify="space-between">

@@ -3,7 +3,7 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
-import { useGetAllKriteria } from "@/services/kriteriaService";
+import { KriteriaService, useGetAllKriteria } from "@/services/kriteriaService";
 import {
   Box,
   Button,
@@ -20,22 +20,36 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import { KriteriaProps } from "../../../../server/controllers/kriteria.controller";
+import { useQueryClient } from "react-query";
 
 const DataKriteria = () => {
   const router = useRouter();
-  const { data: listKriteria }: { data: KriteriaProps[] } = useGetAllKriteria();
+  const queryClient = useQueryClient();
+  const { data: listKriteria }: { data: any[] } = useGetAllKriteria();
 
-  const handleEdit = () => {
-    router.push("/data/data-kriteria/edit-data-kriteria/1");
+  const handleEdit = (kriteria_id: number) => {
+    router.push("/data/data-kriteria/edit-data-kriteria" + `/${kriteria_id}`);
   };
 
-  const renderAksi = () => (
+  const handleDeleteData = async (kriteria_id: number) => {
+    try {
+      const response = await KriteriaService.deleteKriteria(kriteria_id);
+      if (response?.status === 200) {
+        await queryClient.invalidateQueries(["useGetAllKriteria"]);
+        alert("Berhasil handleDeleteData!");
+        // router.push("/data/data-karyawan");
+      }
+    } catch (error: any) {
+      alert(error.stack);
+    }
+  };
+
+  const renderAksi = (values: any) => (
     <Flex gap={12}>
-      <Button color="green" onClick={handleEdit}>
+      <Button color="green" onClick={() => handleEdit(values.kriteria_id)}>
         Ubah
       </Button>
-      <ModalDelete onClick={() => console.log("test")} />
+      <ModalDelete onClick={() => handleDeleteData(values.kriteria_id)} />
     </Flex>
   );
 

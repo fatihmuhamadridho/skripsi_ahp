@@ -3,6 +3,7 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
+import { useGetAllCategoryKriteria } from "@/services/categoryKriteriaService";
 import {
   Box,
   Button,
@@ -22,6 +23,7 @@ import React from "react";
 
 const EntryNilaiKriteria = () => {
   const router = useRouter();
+  const { data: listPeriodeKriteria } = useGetAllCategoryKriteria();
 
   const handleDetail = () => {
     router.push("/proses/entry-nilai-kriteria/detail-entry-nilai-kriteria/1");
@@ -116,7 +118,7 @@ const EntryNilaiKriteria = () => {
             width={"calc(100vw - 230px - 32px - 32px)"}
             mah={480}
             header={listHeader}
-            data={data}
+            data={listPeriodeKriteria}
           />
           <Group align="center" justify="space-between">
             <Text fz={12}>Menampilkan 1 s/d 3 dari 3 data</Text>
