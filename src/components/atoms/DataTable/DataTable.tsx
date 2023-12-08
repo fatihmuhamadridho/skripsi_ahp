@@ -5,7 +5,7 @@ export interface DataTablePrpos {
   header: tableHeadersProps[];
   data?: any[];
   width?: any;
-  mah?: number;
+  mah?: number | string;
 }
 
 export interface tableHeadersProps {
