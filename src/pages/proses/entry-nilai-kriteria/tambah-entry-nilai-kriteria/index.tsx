@@ -106,9 +106,9 @@ const TambahEntryNilaiKriteria = () => {
             [0, 1, 0],
             [0, 0, 1],
           ],
-          nilai_jumlah_kriteria: [1, 1, 1],
-          nilai_prioritas_kriteria: [1, 1, 1],
-          nilai_eigen_kriteria: [1, 1, 1],
+          nilai_jumlah_kriteria: [1, 2, 3],
+          nilai_prioritas_kriteria: [4, 5, 6],
+          nilai_eigen_kriteria: [7, 8, 9],
           total_matriks_nilai_kriteria: [1, 1, 1, 1, 1, 1],
           ci: 0,
           ri: 0,
@@ -349,9 +349,10 @@ const TambahEntryNilaiKriteria = () => {
                                         );
 
                                       if (row !== -1 && col !== -1) {
-                                        const updatedMatriksKriteria = [
-                                          ...values.matriks_kriteria,
-                                        ];
+                                        const updatedMatriksKriteria =
+                                          values.matriks_kriteria.map(
+                                            (row: any) => row.slice()
+                                          );
                                         updatedMatriksKriteria[row][col] = e;
 
                                         // Set diagonal elements to 1
@@ -378,21 +379,52 @@ const TambahEntryNilaiKriteria = () => {
                                           updatedMatriksKriteria
                                         );
 
+                                        // Calculate total for each column
                                         const columnSums =
-                                          updatedMatriksKriteria.reduce(
-                                            (acc: any, row: any) =>
-                                              row.map(
-                                                (el: any, i: number) =>
-                                                  acc[i] + el
-                                              ),
-                                            Array(
-                                              updatedMatriksKriteria.length
-                                            ).fill(0)
+                                          updatedMatriksKriteria[0].map(
+                                            (_: any, i: number) =>
+                                              updatedMatriksKriteria
+                                                .map((row: any) => row[i])
+                                                .reduce(
+                                                  (acc: any, el: any) =>
+                                                    acc + el,
+                                                  0
+                                                )
                                           );
 
+                                        // Set total_matriks_kriteria
                                         setFieldValue(
                                           "total_matriks_kriteria",
                                           columnSums
+                                        );
+
+                                        // Set matriks_nilai_kriteria
+                                        const reciprocalMatriksKriteria =
+                                          updatedMatriksKriteria.map(
+                                            (row: any) =>
+                                              row.map(
+                                                (col: any, j: any) =>
+                                                  col / columnSums[j]
+                                              )
+                                          );
+
+                                        setFieldValue(
+                                          "matriks_nilai_kriteria",
+                                          reciprocalMatriksKriteria
+                                        );
+
+                                        setFieldValue(
+                                          "total_matriks_nilai_kriteria",
+                                          reciprocalMatriksKriteria[0].map(
+                                            (_: any, i: number) =>
+                                              reciprocalMatriksKriteria
+                                                .map((row: any) => row[i])
+                                                .reduce(
+                                                  (acc: any, el: any) =>
+                                                    acc + el,
+                                                  0
+                                                )
+                                          )
                                         );
                                       }
                                     }}
@@ -538,11 +570,18 @@ const TambahEntryNilaiKriteria = () => {
                                         ? "Total"
                                         : String.fromCharCode(65 + index))}
                                   </Table.Th>
-                                  {values?.matriks_nilai_kriteria[index]?.map(
-                                    (item: any, index: any) => (
-                                      <Table.Td key={index}>{item}</Table.Td>
-                                    )
-                                  )}
+                                  {item !== "Total" &&
+                                    values?.matriks_nilai_kriteria[index]?.map(
+                                      (item: any, index: any) => (
+                                        <Table.Td key={index}>{item}</Table.Td>
+                                      )
+                                    )}
+                                  {item === "Total" &&
+                                    values?.total_matriks_nilai_kriteria?.map(
+                                      (item: any, index: any) => (
+                                        <Table.Td key={index}>{item}</Table.Td>
+                                      )
+                                    )}
                                 </Table.Tr>
                               );
                             }
