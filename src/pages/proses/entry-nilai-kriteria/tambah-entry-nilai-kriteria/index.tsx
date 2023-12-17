@@ -3,6 +3,7 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import { DndTable } from "@/components/atoms/DndTable/DndTable";
 import DefaultTemplate from "@/components/templates/Default/Default";
+import { CategoryKriteriaService } from "@/services/categoryKriteriaService";
 import { useGetAllKriteria } from "@/services/kriteriaService";
 import {
   Box,
@@ -23,10 +24,36 @@ import {
 import { MonthPickerInput } from "@mantine/dates";
 import { IconTrash } from "@tabler/icons-react";
 import { Form, Formik } from "formik";
+import { useRouter } from "next/router";
 import React from "react";
+import { useQueryClient } from "react-query";
+
+const randomConsistencyIndex = [
+  0.0, 0.0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41, 1.45, 1.49,
+];
 
 const TambahEntryNilaiKriteria = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { data: listKriteria }: { data: any[] } = useGetAllKriteria();
+
+  const handleTambahData = async (payload: any) => {
+    try {
+      const data = {
+        periode: payload.periode,
+        name: payload.name,
+        BobotKriteria: { ...payload, periode: undefined, name: undefined },
+      };
+      const response = await CategoryKriteriaService.postCategoryKriteria(data);
+      if (response.status === 200) {
+        await queryClient.invalidateQueries(["useGetAllCategoryKriteria"]);
+        alert("Berhasil handleTambahData!");
+        router.push("/proses/entry-nilai-kriteria");
+      }
+    } catch (error: any) {
+      alert(error.stack);
+    }
+  };
 
   const renderKriteria = ({
     data = [],
@@ -53,7 +80,7 @@ const TambahEntryNilaiKriteria = () => {
       width: 50,
     },
     {
-      label: "Kriteria",
+      label: "kriteria_order",
       key: "kriteria_id",
     },
     {
@@ -69,11 +96,11 @@ const TambahEntryNilaiKriteria = () => {
       key: "index",
     },
     {
-      label: "Kriteria Dituju",
+      label: "kriteria_order Dituju",
       key: "kriteria_id",
     },
     {
-      label: "Kriteria Pembanding",
+      label: "kriteria_order Pembanding",
       key: "kriteria_pembanding_id",
     },
     {
@@ -89,11 +116,11 @@ const TambahEntryNilaiKriteria = () => {
         initialValues={{
           periode: new Date(),
           name: "",
-          Kriteria: [0, 0, 0],
-          bobot_kriteria: [
-            { kriteria_id: 5, kriteria_pembanding_id: 7, bobot: 3 },
-            { kriteria_id: 5, kriteria_pembanding_id: 8, bobot: 5 },
-            { kriteria_id: 7, kriteria_pembanding_id: 8, bobot: 3 },
+          kriteria_order: [0, 0, 0],
+          nilai_kriteria: [
+            { kriteria_id: 0, kriteria_pembanding_id: 0, bobot: 0 },
+            { kriteria_id: 0, kriteria_pembanding_id: 0, bobot: 0 },
+            { kriteria_id: 0, kriteria_pembanding_id: 0, bobot: 0 },
           ],
           matriks_kriteria: [
             [1, 0, 0],
@@ -106,15 +133,15 @@ const TambahEntryNilaiKriteria = () => {
             [0, 1, 0],
             [0, 0, 1],
           ],
-          nilai_jumlah_kriteria: [1, 2, 3],
-          nilai_prioritas_kriteria: [4, 5, 6],
-          nilai_eigen_kriteria: [7, 8, 9],
-          total_matriks_nilai_kriteria: [1, 1, 1, 1, 1, 1],
-          ci: 0,
-          ri: 0,
-          cr: 0,
+          nilai_jumlah_kriteria: [1, 1, 1],
+          nilai_prioritas_kriteria: [0.333, 0.333, 0.333],
+          nilai_eigen_kriteria: [0.333, 0.333, 0.333],
+          total_matriks_nilai_kriteria: [1, 1, 1, 1, 0.999, 0.999],
+          ci: (0.999 - 3) / (3 - 1),
+          ri: 0.58,
+          cr: (0.999 - 3) / (3 - 1) / 0.58,
         }}
-        onSubmit={(values: any) => console.log(values)}
+        onSubmit={(values: any) => handleTambahData(values)}
       >
         {({ handleSubmit, values, setFieldValue }) => (
           <Form onSubmit={handleSubmit}>
@@ -158,20 +185,27 @@ const TambahEntryNilaiKriteria = () => {
                                     };
                                   }),
                                   onChange: (e) => {
-                                    if (values.Kriteria.includes(Number(e))) {
+                                    if (
+                                      values.kriteria_order.includes(Number(e))
+                                    ) {
                                       return alert(
                                         "Tidak bisa memilih kriteria yang sama"
                                       );
                                     }
 
-                                    // Set nilai Kriteria sesuai dengan perubahan
-                                    const newKriteria = [...values.Kriteria];
+                                    // Set nilai kriteria_order sesuai dengan perubahan
+                                    const newKriteria = [
+                                      ...values.kriteria_order,
+                                    ];
                                     newKriteria[index] = Number(e);
-                                    setFieldValue("Kriteria", newKriteria);
-
-                                    // Update bobot_kriteria secara otomatis
                                     setFieldValue(
-                                      "bobot_kriteria",
+                                      "kriteria_order",
+                                      newKriteria
+                                    );
+
+                                    // Update nilai_kriteria secara otomatis
+                                    setFieldValue(
+                                      "nilai_kriteria",
                                       newKriteria.flatMap(
                                         (kriteria_id: number, i: number) => {
                                           return newKriteria
@@ -200,17 +234,21 @@ const TambahEntryNilaiKriteria = () => {
                               key: (_: any, index: number) => (
                                 <UnstyledButton
                                   onClick={() => {
-                                    if (values.Kriteria.length === 3)
+                                    if (values.kriteria_order.length === 3)
                                       return alert(
                                         "Anda harus memiliki 3 kriteria yang dipilih"
                                       );
-                                    const newKriteria = values.Kriteria.filter(
-                                      (_: any, itemIndex: number) =>
-                                        itemIndex !== index
-                                    );
-                                    setFieldValue("Kriteria", newKriteria);
+                                    const newKriteria =
+                                      values.kriteria_order.filter(
+                                        (_: any, itemIndex: number) =>
+                                          itemIndex !== index
+                                      );
                                     setFieldValue(
-                                      "bobot_kriteria",
+                                      "kriteria_order",
+                                      newKriteria
+                                    );
+                                    setFieldValue(
+                                      "nilai_kriteria",
                                       newKriteria.flatMap(
                                         (
                                           kriteria_id: number,
@@ -240,9 +278,9 @@ const TambahEntryNilaiKriteria = () => {
                           return header;
                         })}
                         onChange={(e: any[]) => {
-                          setFieldValue("Kriteria", e);
+                          setFieldValue("kriteria_order", e);
                           setFieldValue(
-                            "bobot_kriteria",
+                            "nilai_kriteria",
                             e.flatMap((kriteria_id: number, index: number) => {
                               return e
                                 .slice(index + 1)
@@ -255,14 +293,18 @@ const TambahEntryNilaiKriteria = () => {
                             })
                           );
                         }}
-                        value={values.Kriteria}
+                        value={values.kriteria_order}
                       />
                       <Button
                         onClick={() => {
-                          const newKriteria = values.Kriteria.concat([0]);
-                          setFieldValue("Kriteria", newKriteria);
+                          if (values.kriteria_order.length === 5)
+                            return alert(
+                              "Maksimal kriteria yang dipilih hanya 5"
+                            );
+                          const newKriteria = values.kriteria_order.concat([0]);
+                          setFieldValue("kriteria_order", newKriteria);
                           setFieldValue(
-                            "bobot_kriteria",
+                            "nilai_kriteria",
                             newKriteria.flatMap(
                               (kriteria_id: number, index: number) => {
                                 return newKriteria
@@ -275,6 +317,18 @@ const TambahEntryNilaiKriteria = () => {
                                   });
                               }
                             )
+                          );
+                          setFieldValue(
+                            "nilai_jumlah_kriteria",
+                            values.nilai_jumlah_kriteria.concat([1])
+                          );
+                          setFieldValue(
+                            "nilai_prioritas_kriteria",
+                            values.nilai_prioritas_kriteria.concat([0.333])
+                          );
+                          setFieldValue(
+                            "nilai_eigen_kriteria",
+                            values.nilai_eigen_kriteria.concat([0.333])
                           );
 
                           const newMatriksKriteria = values.matriks_kriteria
@@ -302,8 +356,15 @@ const TambahEntryNilaiKriteria = () => {
                             values.matriks_nilai_kriteria
                               .map((row: any) => [...row, 0])
                               .concat([
-                                newKriteria.map(() => 0).concat([0, 0, 0]),
+                                newKriteria.map((_: any, i: number) =>
+                                  i === values.matriks_kriteria.length ? 1 : 0
+                                ),
                               ])
+                          );
+
+                          setFieldValue(
+                            "ri",
+                            randomConsistencyIndex[newKriteria.length]
                           );
                         }}
                       >
@@ -312,8 +373,8 @@ const TambahEntryNilaiKriteria = () => {
                     </Stack>
                   </Fieldset>
                   <Fieldset
-                    legend="Masukkan Bobot Kriteria"
-                    disabled={values.Kriteria.includes(0)}
+                    legend="Masukkan Bobot kriteria_order"
+                    disabled={values.kriteria_order.includes(0)}
                   >
                     <Stack>
                       <DataTable
@@ -324,27 +385,30 @@ const TambahEntryNilaiKriteria = () => {
                             return {
                               ...header,
                               key: (value: any, index: number) => {
-                                console.log(value);
+                                // console.log(value);
                                 return (
                                   <NumberInput
+                                    max={10}
                                     onChange={(e) => {
                                       setFieldValue(
-                                        `bobot_kriteria[${index}].bobot`,
+                                        `nilai_kriteria[${index}].bobot`,
                                         e
                                       );
 
                                       // Update matriks_kriteria
                                       const kriteriaId =
-                                        values.bobot_kriteria[index]
+                                        values.nilai_kriteria[index]
                                           .kriteria_id;
                                       const kriteriaPembandingId =
-                                        values.bobot_kriteria[index]
+                                        values.nilai_kriteria[index]
                                           .kriteria_pembanding_id;
 
                                       const row =
-                                        values.Kriteria.indexOf(kriteriaId);
+                                        values.kriteria_order.indexOf(
+                                          kriteriaId
+                                        );
                                       const col =
-                                        values.Kriteria.indexOf(
+                                        values.kriteria_order.indexOf(
                                           kriteriaPembandingId
                                         );
 
@@ -358,7 +422,7 @@ const TambahEntryNilaiKriteria = () => {
                                         // Set diagonal elements to 1
                                         for (
                                           let i = 0;
-                                          i < values.Kriteria.length;
+                                          i < values.kriteria_order.length;
                                           i++
                                         ) {
                                           updatedMatriksKriteria[i][i] = 1;
@@ -366,7 +430,7 @@ const TambahEntryNilaiKriteria = () => {
                                           // Set values below the diagonal to reciprocal values
                                           for (
                                             let j = i + 1;
-                                            j < values.Kriteria.length;
+                                            j < values.kriteria_order.length;
                                             j++
                                           ) {
                                             updatedMatriksKriteria[j][i] =
@@ -413,18 +477,84 @@ const TambahEntryNilaiKriteria = () => {
                                           reciprocalMatriksKriteria
                                         );
 
+                                        // Hitung total pada setiap baris matriks_nilai_kriteria
+                                        const rowTotals =
+                                          reciprocalMatriksKriteria.map(
+                                            (row: any) =>
+                                              row.reduce(
+                                                (acc: any, el: any) => acc + el,
+                                                0
+                                              )
+                                          );
+
+                                        // Masukkan total ke dalam nilai_jumlah_kriteria
+                                        setFieldValue(
+                                          "nilai_jumlah_kriteria",
+                                          rowTotals
+                                        );
+
+                                        const rowPriority = rowTotals.map(
+                                          (row: any) => row / 3
+                                        );
+                                        setFieldValue(
+                                          "nilai_prioritas_kriteria",
+                                          rowPriority
+                                        );
+
+                                        const rowEigenValue = rowPriority.map(
+                                          (row: any, index: number) =>
+                                            row * columnSums[index]
+                                        );
+                                        setFieldValue(
+                                          "nilai_eigen_kriteria",
+                                          rowEigenValue
+                                        );
+
+                                        const mergedMatrix =
+                                          reciprocalMatriksKriteria.map(
+                                            (row: any, index: number) => [
+                                              ...row,
+                                              rowTotals[index],
+                                              rowPriority[index],
+                                              rowEigenValue[index],
+                                            ]
+                                          );
+
+                                        const totalMatriksNilaiKriteria =
+                                          mergedMatrix[0].map(
+                                            (_: any, columnIndex: number) =>
+                                              mergedMatrix.reduce(
+                                                (acc: any, row: any) =>
+                                                  acc + row[columnIndex],
+                                                0
+                                              )
+                                          );
+
                                         setFieldValue(
                                           "total_matriks_nilai_kriteria",
-                                          reciprocalMatriksKriteria[0].map(
-                                            (_: any, i: number) =>
-                                              reciprocalMatriksKriteria
-                                                .map((row: any) => row[i])
-                                                .reduce(
-                                                  (acc: any, el: any) =>
-                                                    acc + el,
-                                                  0
-                                                )
-                                          )
+                                          totalMatriksNilaiKriteria
+                                        );
+
+                                        const ciValue =
+                                          (rowEigenValue.reduce(
+                                            (acc: any, el: any) => acc + el,
+                                            0
+                                          ) -
+                                            values.kriteria_order.length) /
+                                          (values.kriteria_order.length - 1);
+
+                                        console.log({
+                                          total: rowEigenValue.reduce(
+                                            (acc: any, el: any) => acc + el,
+                                            0
+                                          ),
+                                          length: values.kriteria_order.length,
+                                        });
+
+                                        setFieldValue("ci", ciValue);
+                                        setFieldValue(
+                                          "cr",
+                                          ciValue / values.ri
                                         );
                                       }
                                     }}
@@ -435,7 +565,7 @@ const TambahEntryNilaiKriteria = () => {
                             };
                           return header;
                         })}
-                        data={values.bobot_kriteria.map((item: any) => {
+                        data={values.nilai_kriteria.map((item: any) => {
                           const kriteria = listKriteria?.find(
                             (k) => k.kriteria_id === item.kriteria_id
                           );
@@ -459,7 +589,7 @@ const TambahEntryNilaiKriteria = () => {
 
               <Paper p={16}>
                 <Stack>
-                  <Fieldset legend="Matriks Perbandingan Kriteria">
+                  <Fieldset legend="Matriks Perbandingan kriteria_order">
                     <Table.ScrollContainer
                       minWidth={"100%"}
                       maw={"calc(100vw - 230px - 32px - 32px - 32px)"}
@@ -476,22 +606,25 @@ const TambahEntryNilaiKriteria = () => {
                         <Table.Thead>
                           <Table.Tr>
                             <Table.Th></Table.Th>
-                            {values?.Kriteria?.map((item: any, index: any) => {
-                              const kriteria = listKriteria?.find(
-                                (k) => k.kriteria_id === item
-                              );
-                              return (
-                                <Table.Th key={index}>
-                                  {kriteria?.name ||
-                                    String.fromCharCode(65 + index)}
-                                </Table.Th>
-                              );
-                            })}
+                            {values?.kriteria_order?.map(
+                              (item: any, index: any) => {
+                                const kriteria = listKriteria?.find(
+                                  (k) => k.kriteria_id === item
+                                );
+                                return (
+                                  <Table.Th key={index}>
+                                    {kriteria?.name ||
+                                      String.fromCharCode(65 + index)}
+                                  </Table.Th>
+                                );
+                              }
+                            )}
                           </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>
-                          {values?.Kriteria?.concat(["Total"]).map(
-                            (item: any, index: any) => {
+                          {values?.kriteria_order
+                            ?.concat(["Total"])
+                            .map((item: any, index: any) => {
                               const kriteria = listKriteria?.find(
                                 (k) => k?.kriteria_id === item
                               );
@@ -517,13 +650,12 @@ const TambahEntryNilaiKriteria = () => {
                                     )}
                                 </Table.Tr>
                               );
-                            }
-                          )}
+                            })}
                         </Table.Tbody>
                       </Table>
                     </Table.ScrollContainer>
                   </Fieldset>
-                  <Fieldset legend="Matriks Nilai Perbandingan Kriteria">
+                  <Fieldset legend="Matriks Nilai Perbandingan kriteria_order">
                     <Table.ScrollContainer
                       minWidth={"100%"}
                       maw={"calc(100vw - 230px - 32px - 32px - 32px)"}
@@ -540,25 +672,28 @@ const TambahEntryNilaiKriteria = () => {
                         <Table.Thead>
                           <Table.Tr>
                             <Table.Th></Table.Th>
-                            {values.Kriteria?.map((item: any, index: any) => {
-                              const kriteria = listKriteria?.find(
-                                (k) => k.kriteria_id === item
-                              );
-                              return (
-                                <Table.Th key={index}>
-                                  {kriteria?.name ||
-                                    String.fromCharCode(65 + index)}
-                                </Table.Th>
-                              );
-                            })}
+                            {values.kriteria_order?.map(
+                              (item: any, index: any) => {
+                                const kriteria = listKriteria?.find(
+                                  (k) => k.kriteria_id === item
+                                );
+                                return (
+                                  <Table.Th key={index}>
+                                    {kriteria?.name ||
+                                      String.fromCharCode(65 + index)}
+                                  </Table.Th>
+                                );
+                              }
+                            )}
                             <Table.Th>Jumlah</Table.Th>
                             <Table.Th>Prioritas</Table.Th>
                             <Table.Th>Eigen Value</Table.Th>
                           </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>
-                          {values.Kriteria?.concat(["Total"])?.map(
-                            (item: any, index: any) => {
+                          {values.kriteria_order
+                            ?.concat(["Total"])
+                            ?.map((item: any, index: any) => {
                               const kriteria = listKriteria?.find(
                                 (k) => k.kriteria_id === item
                               );
@@ -582,15 +717,29 @@ const TambahEntryNilaiKriteria = () => {
                                         <Table.Td key={index}>{item}</Table.Td>
                                       )
                                     )}
+                                  {item !== "Total" && (
+                                    <Table.Td>
+                                      {values?.nilai_jumlah_kriteria[index]}
+                                    </Table.Td>
+                                  )}
+                                  {item !== "Total" && (
+                                    <Table.Td>
+                                      {values?.nilai_prioritas_kriteria[index]}
+                                    </Table.Td>
+                                  )}
+                                  {item !== "Total" && (
+                                    <Table.Td>
+                                      {values?.nilai_eigen_kriteria[index]}
+                                    </Table.Td>
+                                  )}
                                 </Table.Tr>
                               );
-                            }
-                          )}
+                            })}
                         </Table.Tbody>
                       </Table>
                     </Table.ScrollContainer>
                   </Fieldset>
-                  <Flex maw={300} direction={"row"} align={"end"} gap={8}>
+                  <Flex maw={500} direction={"row"} align={"end"} gap={8}>
                     <Table
                       striped
                       stickyHeader
@@ -614,7 +763,9 @@ const TambahEntryNilaiKriteria = () => {
                         </Table.Tr>
                       </Table.Tbody>
                     </Table>
-                    <Text>{values.cr < 0.1 ? "KONSTAN" : "TIDAK KONSTAN"}</Text>
+                    <Text>
+                      {values.cr < 0.1 ? "KONSISTEN" : "TIDAK KONSISTEN"}
+                    </Text>
                   </Flex>
                 </Stack>
               </Paper>

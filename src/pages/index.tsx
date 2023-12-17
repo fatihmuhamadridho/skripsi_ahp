@@ -3,6 +3,7 @@ import { Group, Paper, Stack, Text } from "@mantine/core";
 import {
   IconBook,
   IconBook2,
+  IconBuildingBank,
   IconUser,
   IconUsersGroup,
 } from "@tabler/icons-react";
@@ -46,19 +47,20 @@ const HomePage = () => {
           <Text fz={24} fw={600}>
             Selamat Datang!
           </Text>
-          <Text fz={16} fw={400}>
-            Ini adalah aplikasi untuk memanajemen database
+          <Text fz={16} fw={400} ta={"justify"}>
+            Ini adalah aplikasi untuk tugas akhir implementasi Algoritma
+            Analytical Hierarchy Process (AHP)
           </Text>
         </Paper>
         <Group>
           <CardTotal
-            title="Jumlah Karyawan"
+            title="Jumlah Kriteria"
             total={0}
-            icon={<IconUsersGroup stroke={1.5} size={80} />}
+            icon={<IconBuildingBank stroke={1.5} size={80} />}
             bg="#FF3543"
           />
           <CardTotal
-            title="Jumlah Kriteria"
+            title="Jumlah Alternatif"
             total={0}
             icon={<IconBook2 stroke={1.5} size={80} />}
             bg="#FFB000"

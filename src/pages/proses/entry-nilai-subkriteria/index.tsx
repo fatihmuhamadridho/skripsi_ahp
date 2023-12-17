@@ -3,6 +3,7 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
+import { useGetAllCategoryKriteria } from "@/services/categoryKriteriaService";
 import {
   Box,
   Button,
@@ -12,6 +13,7 @@ import {
   NativeSelect,
   Pagination,
   Paper,
+  Select,
   Stack,
   Text,
   TextInput,
@@ -22,6 +24,7 @@ import React from "react";
 
 const EntryNilaiSubkriteria = () => {
   const router = useRouter();
+  const { data: listPeriodeKriteria } = useGetAllCategoryKriteria({});
 
   const handleDetail = () => {
     router.push(
@@ -60,6 +63,11 @@ const EntryNilaiSubkriteria = () => {
     },
     {
       label: "Kategori Kriteria",
+      key: "name",
+      width: 250,
+    },
+    {
+      label: "Subkriteria",
       key: "index",
       width: 250,
     },
@@ -67,18 +75,6 @@ const EntryNilaiSubkriteria = () => {
       label: "Aksi",
       key: renderAksi,
       width: 300,
-    },
-  ];
-
-  const data = [
-    {
-      periode: "Oktober 2023",
-    },
-    {
-      periode: "November 2023",
-    },
-    {
-      periode: "Desember 2023",
     },
   ];
 
@@ -113,11 +109,27 @@ const EntryNilaiSubkriteria = () => {
               <NativeSelect data={["1", "2", "3"]} />
             </Flex>
           </Group>
+          <Group>
+            <Flex align={"center"} gap={12}>
+              <Text fz={12}>Periode :</Text>
+              <Select
+                data={["Absensi", "Bekerja Sama", "Produktivitas"]}
+                placeholder="Periode"
+              />
+            </Flex>
+            <Flex align={"center"} gap={12}>
+              <Text fz={12}>Kriteria :</Text>
+              <Select
+                data={["Absensi", "Bekerja Sama", "Produktivitas"]}
+                placeholder="Kriteria"
+              />
+            </Flex>
+          </Group>
           <DataTable
             width={"calc(100vw - 230px - 32px - 32px)"}
             mah={480}
             header={listHeader}
-            data={data}
+            data={listPeriodeKriteria}
           />
           <Group align="center" justify="space-between">
             <Text fz={12}>Menampilkan 1 s/d 3 dari 3 data</Text>

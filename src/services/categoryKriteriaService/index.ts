@@ -8,52 +8,91 @@ const apiClient = axios.create({
   },
 });
 
+interface queryParamsCategoryKriteriaServiceProps {
+  bobot_kriteria?: boolean;
+  bobot_subkriteria?: boolean;
+  bobot_alternatif?: boolean;
+}
+
 export class CategoryKriteriaService {
   static ApiEndpoint = {
     category_kriteria: "/category_kriteria",
+    kriteria_subkriteria: "/category_kriteria/kriteria_subkriteria",
+    bobot_subkriteria: "category_kriteria/bobot_subkriteria",
   };
 
-  static getAll() {
-    return apiClient.get(this.ApiEndpoint.category_kriteria);
+  static getAll(params: queryParamsCategoryKriteriaServiceProps) {
+    return apiClient.get(this.ApiEndpoint.category_kriteria, {
+      params,
+    });
   }
 
-  static getOne(mock_id: number) {
-    if (mock_id === undefined) return undefined;
-    return apiClient.get(this.ApiEndpoint.category_kriteria + `/${mock_id}`);
+  static getOne(category_kriteria_id: number) {
+    if (category_kriteria_id === undefined) return undefined;
+    return apiClient.get(
+      this.ApiEndpoint.category_kriteria + `/${category_kriteria_id}`
+    );
   }
 
   static postCategoryKriteria(payload: any) {
     return apiClient.post(this.ApiEndpoint.category_kriteria, payload);
   }
 
-  static putCategoryKriteria(payload: any, mock_id: number) {
-    if (mock_id === undefined) return undefined;
+  static putCategoryKriteria(payload: any, category_kriteria_id: number) {
+    if (category_kriteria_id === undefined) return undefined;
     return apiClient.put(
-      this.ApiEndpoint.category_kriteria + `/${mock_id}`,
+      this.ApiEndpoint.category_kriteria + `/${category_kriteria_id}`,
       payload
     );
   }
 
-  static deleteCategoryKriteria(mock_id: number) {
-    if (mock_id === undefined) return undefined;
-    return apiClient.delete(this.ApiEndpoint.category_kriteria + `/${mock_id}`);
+  static deleteCategoryKriteria(category_kriteria_id: number) {
+    if (category_kriteria_id === undefined) return undefined;
+    return apiClient.delete(
+      this.ApiEndpoint.category_kriteria + `/${category_kriteria_id}`
+    );
+  }
+
+  static getAllKriteriaSubkritera() {
+    return apiClient.get(this.ApiEndpoint.kriteria_subkriteria);
+  }
+
+  static postBobotSubkriteria(payload: any, category_kriteria_id: number) {
+    if (category_kriteria_id === undefined) return undefined;
+    return apiClient.post(
+      this.ApiEndpoint.bobot_subkriteria + `/${category_kriteria_id}`,
+      payload
+    );
   }
 }
 
-export const useGetAllCategoryKriteria = () => {
+export const useGetAllCategoryKriteria = (
+  params: queryParamsCategoryKriteriaServiceProps
+) => {
   const { data, status, isFetching } = useQuery({
-    key: ["useGetAllCategoryKriteria"],
-    fetchAction: async () => CategoryKriteriaService.getAll(),
+    key: ["useGetAllCategoryKriteria", params],
+    fetchAction: async () => CategoryKriteriaService.getAll(params),
     select: (data: any) => data.data.data,
   });
 
   return { data, status, isFetching };
 };
 
-export const useGetOneCategoryKriteria = (mock_id: number) => {
+export const useGetOneCategoryKriteria = (category_kriteria_id: number) => {
   const { data, status, isFetching } = useQuery({
-    key: ["useGetOneCategoryKriteria", mock_id],
-    fetchAction: async () => CategoryKriteriaService.getOne(mock_id),
+    key: ["useGetOneCategoryKriteria", category_kriteria_id],
+    fetchAction: async () =>
+      CategoryKriteriaService.getOne(category_kriteria_id),
+    select: (data: any) => data.data.data,
+  });
+
+  return { data, status, isFetching };
+};
+
+export const useGetAllCategoryKriteriaSubkriteria = () => {
+  const { data, status, isFetching } = useQuery({
+    key: ["useGetAllCategoryKriteriaSubkriteria"],
+    fetchAction: async () => CategoryKriteriaService.getAllKriteriaSubkritera(),
     select: (data: any) => data.data.data,
   });
 

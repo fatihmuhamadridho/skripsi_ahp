@@ -47,16 +47,12 @@ const listRoutes: listRouterProps[] = [
     icon: <IconFileFilled size={18} />,
     children: [
       {
-        title: "Data Karyawan",
-        endpoint: "/data/data-karyawan",
-      },
-      {
         title: "Data Kriteria",
         endpoint: "/data/data-kriteria",
       },
       {
-        title: "Data Sub Kriteria",
-        endpoint: "/data/data-subkriteria",
+        title: "Data Alternatif",
+        endpoint: "/data/data-alternatif",
       },
     ],
   },
@@ -65,12 +61,8 @@ const listRoutes: listRouterProps[] = [
     icon: <IconChartHistogram size={18} />,
     children: [
       {
-        title: "Entry Nilai Kriteria",
-        endpoint: "/proses/entry-nilai-kriteria",
-      },
-      {
-        title: "Entry Nilai Sub Kriteria",
-        endpoint: "/proses/entry-nilai-subkriteria",
+        title: "Entry Nilai Kriteria 2",
+        endpoint: "/proses/entry-nilai-kriteria2",
       },
       {
         title: "Entry Nilai Alternatif",

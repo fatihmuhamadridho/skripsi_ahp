@@ -4,10 +4,6 @@ import DataTable, {
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
 import {
-  CategoryKriteriaService,
-  useGetAllCategoryKriteria,
-} from "@/services/categoryKriteriaService";
-import {
   Box,
   Button,
   Divider,
@@ -23,47 +19,22 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 import React from "react";
-import { useQueryClient } from "react-query";
 
-const EntryNilaiKriteria = () => {
+const DetailEntryNilaiSubkriteria = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const { data: listPeriodeKriteria } = useGetAllCategoryKriteria({});
 
   const handleDetail = () => {
-    router.push("/proses/entry-nilai-kriteria/detail-entry-nilai-kriteria/1");
+    router.push(
+      "/proses/entry-nilai-subkriteria/detail-entry-nilai-subkriteria/1"
+    );
   };
 
-  const handleEdit = () => {
-    router.push("/proses/entry-nilai-kriteria/edit-entry-nilai-kriteria/1");
-  };
-
-  const handleDeleteData = async (cateogry_kriteria_id: number) => {
-    try {
-      const response = await CategoryKriteriaService.deleteCategoryKriteria(
-        cateogry_kriteria_id
-      );
-      if (response?.status === 200) {
-        await queryClient.invalidateQueries(["useGetAllCategoryKriteria"]);
-        alert("Berhasil handleDeleteData!");
-        // router.push("/data/data-karyawan");
-      }
-    } catch (error: any) {
-      alert(error.stack);
-    }
-  };
-
-  const renderAksi = (values: any) => (
+  const renderAksi = () => (
     <Flex gap={12}>
       <Button color="blue" onClick={handleDetail}>
-        Detail
+        Pilih
       </Button>
-      <Button color="green" onClick={handleEdit}>
-        Ubah
-      </Button>
-      <ModalDelete
-        onClick={() => handleDeleteData(values.category_kriteria_id)}
-      />
+      <ModalDelete onClick={() => console.log("test")} />
     </Flex>
   );
 
@@ -76,11 +47,11 @@ const EntryNilaiKriteria = () => {
     {
       label: "Periode",
       key: "periode",
-      width: 200,
+      width: 250,
     },
     {
-      label: "Nama",
-      key: "name",
+      label: "Kategori Kriteria",
+      key: "index",
       width: 250,
     },
     {
@@ -93,28 +64,31 @@ const EntryNilaiKriteria = () => {
   const data = [
     {
       periode: "Oktober 2023",
-      name: "Karyawan Terbaik Oktober 2023",
     },
     {
       periode: "November 2023",
-      name: "Karyawan Terbaik November 2023",
     },
     {
       periode: "Desember 2023",
-      name: "Karyawan Terbaik Desember 2023",
     },
   ];
 
   return (
-    <DefaultTemplate title="EntryNilaiKriteria">
+    <DefaultTemplate title="DetailEntryNilaiSubkriteria">
       <Paper p={16}>
         <Stack>
+          <Box>
+            <Button variant="filled" color="red" onClick={() => router.back()}>
+              Kembali
+            </Button>
+          </Box>
+          <Divider />
           <Box>
             <Button
               variant="default"
               onClick={() =>
                 router.push(
-                  "/proses/entry-nilai-kriteria/tambah-entry-nilai-kriteria"
+                  "/proses/entry-nilai-subkriteria/tambah-entry-nilai-subkriteria"
                 )
               }
             >
@@ -140,7 +114,7 @@ const EntryNilaiKriteria = () => {
             width={"calc(100vw - 230px - 32px - 32px)"}
             mah={480}
             header={listHeader}
-            data={listPeriodeKriteria}
+            data={data}
           />
           <Group align="center" justify="space-between">
             <Text fz={12}>Menampilkan 1 s/d 3 dari 3 data</Text>
@@ -152,4 +126,4 @@ const EntryNilaiKriteria = () => {
   );
 };
 
-export default EntryNilaiKriteria;
+export default DetailEntryNilaiSubkriteria;
