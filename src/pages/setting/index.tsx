@@ -132,13 +132,13 @@ const SettingPage = () => {
           }}
           onSubmit={(values: any) => {
             handleTambahData(values);
-            console.log(
-              util.inspect(values, {
-                showHidden: false,
-                depth: null,
-                colors: true,
-              })
-            );
+            // console.log(
+            //   util.inspect(values, {
+            //     showHidden: false,
+            //     depth: null,
+            //     colors: true,
+            //   })
+            // );
           }}
         >
           {({ handleSubmit, values, setFieldValue }) => (

@@ -78,11 +78,6 @@ const RankingPage = () => {
                 placeholder="Cari"
               />
             </Flex>
-
-            <Flex align={"center"} gap={12}>
-              <Text fz={12}>Data per halaman</Text>
-              <NativeSelect data={["1", "2", "3"]} />
-            </Flex>
           </Group>
           <DataTable mah={480} header={listHeader} data={data} />
         </Stack>

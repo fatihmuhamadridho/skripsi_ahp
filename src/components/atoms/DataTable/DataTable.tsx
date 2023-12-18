@@ -42,7 +42,7 @@ const DataTable = ({ header, data, width, mah }: DataTablePrpos) => {
               {data?.map((itemData: any, itemIndex: number) => {
                 return (
                   <Table.Tr key={itemIndex}>
-                    {header.map((headData, headIndex: number) => {
+                    {header?.map((headData, headIndex: number) => {
                       if (headData.key === "index")
                         return (
                           <Table.Td

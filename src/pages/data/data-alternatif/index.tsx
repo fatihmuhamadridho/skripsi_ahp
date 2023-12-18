@@ -3,7 +3,11 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
-import { KriteriaService, useGetAllKriteria } from "@/services/kriteriaService";
+import {
+  AlternatifService,
+  useGetAllAlternatif,
+} from "@/services/alternatifService";
+import { useGetAllAttribute } from "@/services/attributeService";
 import {
   Box,
   Button,
@@ -25,33 +29,37 @@ import { useQueryClient } from "react-query";
 const DataAlternatif = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { data: listKriteria }: { data: any[] } = useGetAllKriteria();
+  const { data: listAttribute }: { data: any[] } = useGetAllAttribute();
+  const { data: listAlternatif } = useGetAllAlternatif();
 
-  const handleEdit = (kriteria_id: number) => {
-    router.push("/data/data-kriteria/edit-data-kriteria" + `/${kriteria_id}`);
+  const handleEdit = (alternatif_id: number) => {
+    router.push(
+      "/data/data-alternatif/edit-data-alternatif" + `/${alternatif_id}`
+    );
   };
 
-  const handleDeleteData = async (kriteria_id: number) => {
+  const handleDeleteData = async (alternatif_id: number) => {
     try {
-      const response = await KriteriaService.deleteKriteria(kriteria_id);
+      const response = await AlternatifService.deleteAlternatif(alternatif_id);
       if (response?.status === 200) {
-        await queryClient.invalidateQueries(["useGetAllKriteria"]);
+        await queryClient.invalidateQueries(["useGetAllAlternatif"]);
         alert("Berhasil handleDeleteData!");
-        // router.push("/data/data-karyawan");
       }
     } catch (error: any) {
       alert(error.stack);
     }
   };
 
-  const renderAksi = (values: any) => (
-    <Flex gap={12}>
-      <Button color="green" onClick={() => handleEdit(values.kriteria_id)}>
-        Ubah
-      </Button>
-      <ModalDelete onClick={() => handleDeleteData(values.kriteria_id)} />
-    </Flex>
-  );
+  const renderAksi = (values: any) => {
+    return (
+      <Flex gap={12}>
+        <Button color="green" onClick={() => handleEdit(values.alternatif_id)}>
+          Ubah
+        </Button>
+        <ModalDelete onClick={() => handleDeleteData(values.alternatif_id)} />
+      </Flex>
+    );
+  };
 
   const listHeader: tableHeadersProps[] = [
     {
@@ -59,17 +67,25 @@ const DataAlternatif = () => {
       key: "index",
       width: 30,
     },
-    {
-      label: "Nama Kriteria",
-      key: "name",
-      width: 250,
-    },
+  ];
+  const listHeader2: tableHeadersProps[] = [
     {
       label: "Aksi",
       key: renderAksi,
       width: 200,
     },
   ];
+  const listHeader3: tableHeadersProps[] = listHeader
+    ?.concat(
+      listAttribute?.map((item: any) => {
+        return {
+          label: item?.label,
+          key: item?.key,
+          width: 220,
+        };
+      })
+    )
+    ?.concat(listHeader2);
 
   return (
     <DefaultTemplate title="DataAlternatif">
@@ -79,7 +95,7 @@ const DataAlternatif = () => {
             <Button
               variant="default"
               onClick={() =>
-                router.push("/data/data-kriteria/tambah-data-kriteria")
+                router.push("/data/data-alternatif/tambah-data-alternatif")
               }
             >
               Tambah Data
@@ -94,13 +110,17 @@ const DataAlternatif = () => {
                 placeholder="Cari"
               />
             </Flex>
-
-            <Flex align={"center"} gap={12}>
-              <Text fz={12}>Data per halaman</Text>
-              <NativeSelect data={["1", "2", "3"]} />
-            </Flex>
           </Group>
-          <DataTable mah={480} header={listHeader} data={listKriteria} />
+          <DataTable
+            mah={480}
+            header={listAttribute ? listHeader3 : []}
+            data={listAlternatif?.map((item: any) => {
+              return {
+                alternatif_id: item.alternatif_id,
+                ...item?.dataJson,
+              };
+            })}
+          />
         </Stack>
       </Paper>
     </DefaultTemplate>
