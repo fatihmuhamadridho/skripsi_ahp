@@ -1,12 +1,14 @@
 import useQuery from "@/libs/useQuery";
-import axios from "axios";
+import { instance } from "@/libs/api/client";
 
-const apiClient = axios.create({
+const apiClient = instance({
   baseURL: process.env.NEXT_PUBLIC_BASE_API_URL + "/spkahp",
-  headers: {
-    Authorization: "Basic abcd",
-  },
 });
+
+export interface UserServicePostUserProps {
+  fullname: string;
+  username: string;
+}
 
 export class UserService {
   static ApiEndpoint = {
@@ -22,11 +24,11 @@ export class UserService {
     return apiClient.get(this.ApiEndpoint.user + `/${user_id}`);
   }
 
-  static postUser(payload: any) {
+  static postUser(payload: UserServicePostUserProps) {
     return apiClient.post(this.ApiEndpoint.user, payload);
   }
 
-  static putUser(payload: any, user_id: number) {
+  static putUser(payload: UserServicePostUserProps, user_id: number) {
     if (user_id === undefined) return undefined;
     return apiClient.put(this.ApiEndpoint.user + `/${user_id}`, payload);
   }

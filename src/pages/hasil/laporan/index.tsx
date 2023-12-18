@@ -60,16 +60,7 @@ const LaporanPage = () => {
               <NativeSelect data={["1", "2", "3"]} />
             </Flex>
           </Group>
-          <DataTable
-            width={"calc(100vw - 230px - 32px - 32px)"}
-            mah={480}
-            header={listHeader}
-            data={data}
-          />
-          <Group align="center" justify="space-between">
-            <Text fz={12}>Menampilkan 1 s/d 3 dari 3 data</Text>
-            <Pagination size={"sm"} total={10} />
-          </Group>
+          <DataTable mah={480} header={listHeader} data={data} />
         </Stack>
       </Paper>
     </DefaultTemplate>

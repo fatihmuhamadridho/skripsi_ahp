@@ -1,11 +1,8 @@
 import useQuery from "@/libs/useQuery";
-import axios from "axios";
+import { instance } from "@/libs/api/client";
 
-const apiClient = axios.create({
+const apiClient = instance({
   baseURL: process.env.NEXT_PUBLIC_BASE_API_URL + "/spkahp",
-  headers: {
-    Authorization: "Basic abcd",
-  },
 });
 
 export class MockService {

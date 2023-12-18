@@ -18,13 +18,12 @@ import {
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import React from "react";
-import { UserModelProps } from "../../../server/controllers/user.controller";
 import { useRouter } from "next/router";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 
 const UserPage = () => {
   const router = useRouter();
-  const { data: listUser }: { data: UserModelProps[] } = useGetAllUser();
+  const { data: listUser } = useGetAllUser();
 
   const handleAdd = () => {
     router.push("/user/tambah-user");
@@ -86,12 +85,7 @@ const UserPage = () => {
               <NativeSelect data={["1", "2", "3"]} />
             </Flex>
           </Group>
-          <DataTable
-            width={"calc(100vw - 230px - 32px - 32px)"}
-            mah={480}
-            header={listHeader}
-            data={listUser}
-          />
+          <DataTable mah={480} header={listHeader} data={listUser} />
           <Group align="center" justify="space-between">
             <Text fz={12}>Menampilkan 1 s/d 3 dari 3 data</Text>
             <Pagination size={"sm"} total={10} />

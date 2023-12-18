@@ -22,7 +22,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useQueryClient } from "react-query";
 
-const DataKriteria = () => {
+const AnalisaAlternatif = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data: listKriteria }: { data: any[] } = useGetAllKriteria();
@@ -72,7 +72,7 @@ const DataKriteria = () => {
   ];
 
   return (
-    <DefaultTemplate title="DataKriteria">
+    <DefaultTemplate title="AnalisaAlternatif">
       <Paper p={16}>
         <Stack>
           <Box>
@@ -107,4 +107,4 @@ const DataKriteria = () => {
   );
 };
 
-export default DataKriteria;
+export default AnalisaAlternatif;
