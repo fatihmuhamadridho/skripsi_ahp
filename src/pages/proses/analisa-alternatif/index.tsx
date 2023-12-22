@@ -3,8 +3,13 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
+import {
+  AnalisaKriteriaService,
+  useGetAllAnalisaKriteria,
+} from "@/services/analisaKriteriaService";
 import { KriteriaService, useGetAllKriteria } from "@/services/kriteriaService";
 import {
+  Badge,
   Box,
   Button,
   Divider,
@@ -26,30 +31,26 @@ const AnalisaAlternatif = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data: listKriteria }: { data: any[] } = useGetAllKriteria();
+  const { data: listAnalisaKriteria } = useGetAllAnalisaKriteria();
 
-  const handleEdit = (kriteria_id: number) => {
-    router.push("/data/data-kriteria/edit-data-kriteria" + `/${kriteria_id}`);
-  };
+  const renderAlternatif = (values: any) => (
+    <Group gap={8}>
+      {values.AnalisaAlternatif.map((item: any, index: number) => (
+        <Badge key={index}>{item.Alternatif.dataJson.fullname}</Badge>
+      ))}
+    </Group>
+  );
 
-  const handleDeleteData = async (kriteria_id: number) => {
-    try {
-      const response = await KriteriaService.deleteKriteria(kriteria_id);
-      if (response?.status === 200) {
-        await queryClient.invalidateQueries(["useGetAllKriteria"]);
-        alert("Berhasil handleDeleteData!");
-        // router.push("/data/data-karyawan");
-      }
-    } catch (error: any) {
-      alert(error.stack);
-    }
+  const renderTotalAlternatif = (values: any) => {
+    return <Text>{values.AnalisaAlternatif.length}</Text>;
   };
 
   const renderAksi = (values: any) => (
     <Flex gap={12}>
-      <Button color="green" onClick={() => handleEdit(values.kriteria_id)}>
+      <Button color="green" onClick={() => handleEditData(values.kategori_id)}>
         Ubah
       </Button>
-      <ModalDelete onClick={() => handleDeleteData(values.kriteria_id)} />
+      <ModalDelete onClick={() => handleDeleteData(values.kategori_id)} />
     </Flex>
   );
 
@@ -60,9 +61,24 @@ const AnalisaAlternatif = () => {
       width: 30,
     },
     {
-      label: "Nama Kriteria",
+      label: "Nama Kategori Kriteria",
       key: "name",
-      width: 250,
+      width: 200,
+    },
+    {
+      label: "Periode",
+      key: "periode",
+      width: 200,
+    },
+    {
+      label: "Alternatif",
+      key: renderAlternatif,
+      width: 200,
+    },
+    {
+      label: "Jumlah Alternatif",
+      key: renderTotalAlternatif,
+      width: 200,
     },
     {
       label: "Aksi",
@@ -70,6 +86,27 @@ const AnalisaAlternatif = () => {
       width: 200,
     },
   ];
+
+  const handleEditData = (kategori_id: number) => {
+    router.push(
+      "/proses/analisa-kriteria/edit-analisa-kriteria" + `/${kategori_id}`
+    );
+  };
+
+  const handleDeleteData = async (kategori_id: number) => {
+    try {
+      const response = await AnalisaKriteriaService.deleteAnalisaKriteria(
+        kategori_id
+      );
+      if (response?.status === 200) {
+        await queryClient.invalidateQueries(["useGetAllAnalisaKriteria"]);
+        alert("Berhasil handleDeleteData!");
+        // router.push("/data/data-karyawan");
+      }
+    } catch (error: any) {
+      alert(error.stack);
+    }
+  };
 
   return (
     <DefaultTemplate title="AnalisaAlternatif">
@@ -79,7 +116,9 @@ const AnalisaAlternatif = () => {
             <Button
               variant="default"
               onClick={() =>
-                router.push("/data/data-kriteria/tambah-data-kriteria")
+                router.push(
+                  "/proses/analisa-alternatif/tambah-analisa-alternatif"
+                )
               }
             >
               Tambah Data
@@ -95,7 +134,7 @@ const AnalisaAlternatif = () => {
               />
             </Flex>
           </Group>
-          <DataTable mah={480} header={listHeader} data={listKriteria} />
+          <DataTable mah={480} header={listHeader} data={listAnalisaKriteria} />
         </Stack>
       </Paper>
     </DefaultTemplate>

@@ -4,22 +4,23 @@ import React from "react";
 export interface DataTablePrpos {
   header: tableHeadersProps[];
   data?: any[];
-  width?: any;
+  maw?: any;
   mah?: number | string;
 }
 
 export interface tableHeadersProps {
   label?: string;
   key?: any;
-  width?: number;
+  width?: string | number;
 }
 
-const DataTable = ({ header, data, width, mah }: DataTablePrpos) => {
+const DataTable = ({ header, data, maw, mah }: DataTablePrpos) => {
   return (
     <SimpleGrid>
       <Table.ScrollContainer
         className="break-words overflow-hidden"
         minWidth={"100%"}
+        maw={maw}
         mah={mah || 550}
       >
         <Table

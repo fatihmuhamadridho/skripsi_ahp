@@ -48,33 +48,27 @@ const DefaultTemplate = ({ title, children }: DefaultTemplateProps) => {
             <Sidebar />
           </Drawer>
         )}
-        {!matches && (
-          <Box className="transition-all duration-300" w={"100%"}>
-            <Navbar
-              title={title}
-              onExpand={() => {
-                setExpandMobile(!expandMobile);
-                setExpand(!expandMobile);
-              }}
-            />
-            <Container mt={50} p={16} fluid>
-              {children}
-            </Container>
-          </Box>
-        )}
         {matches && <Sidebar />}
-        {matches && (
-          <Box
-            className="transition-all duration-300"
-            w={"100%"}
-            ml={expand ? 230 : 60}
-          >
-            <Navbar title={title} />
-            <Container mt={50} p={16} fluid>
-              {children}
-            </Container>
-          </Box>
-        )}
+        <Box
+          className="transition-all duration-300"
+          w={"100%"}
+          ml={matches ? (expand ? 230 : 60) : 0}
+        >
+          <Navbar
+            title={title}
+            onExpand={
+              !matches
+                ? () => {
+                    setExpandMobile(!expandMobile);
+                    setExpand(!expandMobile);
+                  }
+                : undefined
+            }
+          />
+          <Container mt={50} p={16} fluid>
+            {children}
+          </Container>
+        </Box>
       </Flex>
     </SidebarContext.Provider>
   );

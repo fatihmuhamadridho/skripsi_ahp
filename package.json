@@ -4,14 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && prisma db push",
+    "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "database-push": "prisma db push",
-    "database-migrate": "prisma migrate dev",
-    "database-reset": "prisma db push --force-reset && node ./server/libs/reset.js",
-    "database-reset-migration": "rm -rf ./prisma/migrations",
-    "database-mock": "node ./server/libs/mock.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^16.5.0",

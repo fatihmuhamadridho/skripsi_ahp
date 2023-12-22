@@ -1,4 +1,4 @@
-import { Table, rem } from "@mantine/core";
+import { SimpleGrid, Table, TableScrollContainer, rem } from "@mantine/core";
 import { useListState } from "@mantine/hooks";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { IconGripVertical } from "@tabler/icons-react";
@@ -6,25 +6,25 @@ import classes from "./DndTable.module.css";
 import { useEffect } from "react";
 import { useState } from "react";
 
-export interface DataTablePrpos {
-  header: tableHeadersProps[];
+export interface DndTablePrpos {
+  header: dndTableHeadersProps[];
   onChange?: (e?: any) => void;
   value?: any[];
   width?: any;
   mah?: number;
 }
 
-export interface tableHeadersProps {
+export interface dndTableHeadersProps {
   label?: string;
   key?: any;
-  width?: number;
+  width?: string | number;
 }
 
-const defaultHeader: tableHeadersProps[] = [
+const defaultHeader: dndTableHeadersProps[] = [
   {
     label: "#",
     key: "dnd",
-    width: 50,
+    width: 40,
   },
 ];
 
@@ -34,7 +34,7 @@ export function DndTable({
   value,
   width,
   mah,
-}: DataTablePrpos) {
+}: DndTablePrpos) {
   const [isDragEnd, setIsDragEnd] = useState<boolean>(false);
   const [state, handlers] = useListState(value);
 
@@ -50,7 +50,7 @@ export function DndTable({
     }
   }, [handlers, isDragEnd, onChange, state, value]);
 
-  const Items = ({ header, value }: DataTablePrpos) => {
+  const Items = ({ header, value }: DndTablePrpos) => {
     return value?.map((itemData, itemIndex) => (
       <Draggable
         key={itemIndex}
@@ -120,12 +120,7 @@ export function DndTable({
   };
 
   return (
-    <Table.ScrollContainer
-      minWidth={"100%"}
-      maw={width || "calc(100vw - 230px - 32px)"}
-      type="native"
-      mah={mah || 550}
-    >
+    <SimpleGrid>
       <DragDropContext
         onDragEnd={({ destination, source }) => {
           setIsDragEnd(true);
@@ -135,41 +130,50 @@ export function DndTable({
           });
         }}
       >
-        <Table
-          striped
-          stickyHeader
-          stickyHeaderOffset={-0.3}
-          highlightOnHover
-          withTableBorder
-          withColumnBorders
+        <TableScrollContainer
+          className="break-words overflow-hidden"
+          minWidth={"100%"}
+          mah={mah || 550}
         >
-          <Table.Thead className="z-[5]">
-            <Table.Tr>
-              {header
-                ? defaultHeader
-                    ?.concat(header)
-                    ?.map((headData, headIndex: number) => {
+          <Table
+            striped
+            stickyHeader
+            stickyHeaderOffset={-0.3}
+            highlightOnHover
+            withTableBorder
+            withColumnBorders
+          >
+            <Table.Thead className="z-[5]">
+              <Table.Tr>
+                {header
+                  ? defaultHeader
+                      ?.concat(header)
+                      ?.map((headData, headIndex: number) => {
+                        return (
+                          <Table.Th key={headIndex}>{headData.label}</Table.Th>
+                        );
+                      })
+                  : defaultHeader?.map((headData, headIndex: number) => {
                       return (
                         <Table.Th key={headIndex}>{headData.label}</Table.Th>
                       );
-                    })
-                : defaultHeader?.map((headData, headIndex: number) => {
-                    return (
-                      <Table.Th key={headIndex}>{headData.label}</Table.Th>
-                    );
-                  })}
-            </Table.Tr>
-          </Table.Thead>
-          <Droppable droppableId="dnd-list" direction="vertical">
-            {(provided) => (
-              <Table.Tbody {...provided.droppableProps} ref={provided.innerRef}>
-                <Items header={defaultHeader.concat(header)} value={state} />
-                {provided.placeholder}
-              </Table.Tbody>
-            )}
-          </Droppable>
-        </Table>
+                    })}
+              </Table.Tr>
+            </Table.Thead>
+            <Droppable droppableId="dnd-list" direction="vertical">
+              {(provided) => (
+                <Table.Tbody
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  <Items header={defaultHeader.concat(header)} value={state} />
+                  {provided.placeholder}
+                </Table.Tbody>
+              )}
+            </Droppable>
+          </Table>
+        </TableScrollContainer>
       </DragDropContext>
-    </Table.ScrollContainer>
+    </SimpleGrid>
   );
 }

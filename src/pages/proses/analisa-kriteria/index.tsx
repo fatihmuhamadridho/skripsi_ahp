@@ -3,8 +3,13 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
+import {
+  AnalisaKriteriaService,
+  useGetAllAnalisaKriteria,
+} from "@/services/analisaKriteriaService";
 import { KriteriaService, useGetAllKriteria } from "@/services/kriteriaService";
 import {
+  Badge,
   Box,
   Button,
   Divider,
@@ -25,31 +30,31 @@ import { useQueryClient } from "react-query";
 const AnalisaKriteria = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { data: listKriteria }: { data: any[] } = useGetAllKriteria();
+  const { data: listAnalisaKriteria } = useGetAllAnalisaKriteria();
 
-  const handleEdit = (kriteria_id: number) => {
-    router.push("/data/data-kriteria/edit-data-kriteria" + `/${kriteria_id}`);
-  };
+  const renderKriteria = (values: any) => (
+    <Group gap={8}>
+      {values.KategoriKriteria.map((item: any, index: number) => (
+        <Badge key={index}>{item.Kriteria.name}</Badge>
+      ))}
+    </Group>
+  );
 
-  const handleDeleteData = async (kriteria_id: number) => {
-    try {
-      const response = await KriteriaService.deleteKriteria(kriteria_id);
-      if (response?.status === 200) {
-        await queryClient.invalidateQueries(["useGetAllKriteria"]);
-        alert("Berhasil handleDeleteData!");
-        // router.push("/data/data-karyawan");
-      }
-    } catch (error: any) {
-      alert(error.stack);
-    }
+  const renderCR = (values: any) => {
+    const crPercentage = values?.AnalisaKriteria?.cr * 100;
+    return (
+      <Text c={isNaN(crPercentage) || crPercentage > 10 ? "red" : "green"}>
+        {String(crPercentage).slice(0, 4)} %
+      </Text>
+    );
   };
 
   const renderAksi = (values: any) => (
     <Flex gap={12}>
-      <Button color="green" onClick={() => handleEdit(values.kriteria_id)}>
+      <Button color="green" onClick={() => handleEditData(values.kategori_id)}>
         Ubah
       </Button>
-      <ModalDelete onClick={() => handleDeleteData(values.kriteria_id)} />
+      <ModalDelete onClick={() => handleDeleteData(values.kategori_id)} />
     </Flex>
   );
 
@@ -60,9 +65,23 @@ const AnalisaKriteria = () => {
       width: 30,
     },
     {
-      label: "Nama Kriteria",
+      label: "Nama Kategori Kriteria",
       key: "name",
-      width: 250,
+      width: 200,
+    },
+    {
+      label: "Periode",
+      key: "periode",
+      width: 200,
+    },
+    {
+      label: "Kriteria",
+      key: renderKriteria,
+      width: 200,
+    },
+    {
+      label: "CR",
+      key: renderCR,
     },
     {
       label: "Aksi",
@@ -70,6 +89,27 @@ const AnalisaKriteria = () => {
       width: 200,
     },
   ];
+
+  const handleEditData = (kategori_id: number) => {
+    router.push(
+      "/proses/analisa-kriteria/edit-analisa-kriteria" + `/${kategori_id}`
+    );
+  };
+
+  const handleDeleteData = async (kategori_id: number) => {
+    try {
+      const response = await AnalisaKriteriaService.deleteAnalisaKriteria(
+        kategori_id
+      );
+      if (response?.status === 200) {
+        await queryClient.invalidateQueries(["useGetAllAnalisaKriteria"]);
+        alert("Berhasil handleDeleteData!");
+        // router.push("/data/data-karyawan");
+      }
+    } catch (error: any) {
+      alert(error.stack);
+    }
+  };
 
   return (
     <DefaultTemplate title="AnalisaKriteria">
@@ -79,7 +119,7 @@ const AnalisaKriteria = () => {
             <Button
               variant="default"
               onClick={() =>
-                router.push("/data/data-kriteria/tambah-data-kriteria")
+                router.push("/proses/analisa-kriteria/tambah-analisa-kriteria")
               }
             >
               Tambah Data
@@ -95,7 +135,7 @@ const AnalisaKriteria = () => {
               />
             </Flex>
           </Group>
-          <DataTable mah={480} header={listHeader} data={listKriteria} />
+          <DataTable mah={480} header={listHeader} data={listAnalisaKriteria} />
         </Stack>
       </Paper>
     </DefaultTemplate>
