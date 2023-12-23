@@ -82,18 +82,9 @@ const listRoutes: listRouterProps[] = [
     ],
   },
   {
-    title: "Hasil",
+    title: "Laporan",
+    endpoint: "/laporan",
     icon: <IconPrinter size={18} />,
-    children: [
-      {
-        title: "Ranking",
-        endpoint: "/hasil/ranking",
-      },
-      {
-        title: "Laporan",
-        endpoint: "/hasil/laporan",
-      },
-    ],
   },
   {
     title: "divider",
