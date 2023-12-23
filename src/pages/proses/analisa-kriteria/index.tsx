@@ -51,9 +51,7 @@ const AnalisaKriteria = () => {
 
   const renderAksi = (values: any) => (
     <Flex gap={12}>
-      <Button color="green" onClick={() => handleEditData(values.kategori_id)}>
-        Ubah
-      </Button>
+      <Button onClick={() => handleEditData(values.kategori_id)}>Detail</Button>
       <ModalDelete onClick={() => handleDeleteData(values.kategori_id)} />
     </Flex>
   );

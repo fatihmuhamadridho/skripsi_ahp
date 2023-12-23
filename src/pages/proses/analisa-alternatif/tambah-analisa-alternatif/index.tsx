@@ -1,30 +1,23 @@
-import DataTable, {
-  tableHeadersProps,
-} from "@/components/atoms/DataTable/DataTable";
-import { DndTable } from "@/components/atoms/DndTable/DndTable";
+import DataTable from "@/components/atoms/DataTable/DataTable";
 import DefaultTemplate from "@/components/templates/Default/Default";
 import { useGetAllAlternatif } from "@/services/alternatifService";
 import { AnalisaAlternatifService } from "@/services/analisaAlternatifService";
 import { useGetAllAnalisaKriteria } from "@/services/analisaKriteriaService";
-import { KriteriaService } from "@/services/kriteriaService";
 import {
   Button,
   Divider,
   Fieldset,
-  Flex,
   NumberInput,
   Paper,
   Select,
   Stack,
   Text,
-  TextInput,
-  Textarea,
   UnstyledButton,
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
 import { useQueryClient } from "react-query";
 import util from "util";
 
@@ -231,6 +224,9 @@ const TambahAnalisaAlternatif = () => {
                                         newAlternatif
                                       );
                                     }}
+                                    value={
+                                      values.alternatif[j].bobot[index].bobot
+                                    }
                                   />
                                 ),
                                 width: 150,

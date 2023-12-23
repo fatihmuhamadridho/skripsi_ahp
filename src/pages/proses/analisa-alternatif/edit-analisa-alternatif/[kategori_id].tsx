@@ -1,15 +1,14 @@
-import DataTable, {
-  tableHeadersProps,
-} from "@/components/atoms/DataTable/DataTable";
-import { DndTable } from "@/components/atoms/DndTable/DndTable";
+import DataTable from "@/components/atoms/DataTable/DataTable";
 import DefaultTemplate from "@/components/templates/Default/Default";
-import { useGetAllAlternatif } from "@/services/alternatifService";
+import {
+  useGetAllAlternatif,
+  useGetOneAlternatif,
+} from "@/services/alternatifService";
 import {
   AnalisaAlternatifService,
   useGetOneAnalisaAlternatif,
 } from "@/services/analisaAlternatifService";
 import { useGetAllAnalisaKriteria } from "@/services/analisaKriteriaService";
-import { KriteriaService } from "@/services/kriteriaService";
 import {
   Button,
   Divider,
@@ -19,12 +18,12 @@ import {
   Select,
   Stack,
   Text,
-  TextInput,
-  Textarea,
+  UnstyledButton,
 } from "@mantine/core";
+import { IconTrash } from "@tabler/icons-react";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useQueryClient } from "react-query";
 import util from "util";
 
@@ -36,43 +35,6 @@ const TambahAnalisaAlternatif = () => {
   const { data: listAlternatif } = useGetAllAlternatif();
   const { data: detailAnalisaAlternatif } =
     useGetOneAnalisaAlternatif(kategori_id);
-  const [isRender, setIsRender] = useState<boolean>(true);
-  const [alternatif, setAlternatif] = useState<any>([
-    {
-      alternatif_id: 0,
-      bobot: [
-        { kriteria_id: 0, bobot: 0, value: 0 },
-        { kriteria_id: 0, bobot: 0, value: 0 },
-        { kriteria_id: 0, bobot: 0, value: 0 },
-      ],
-      total_bobot: 0,
-    },
-    {
-      alternatif_id: 0,
-      bobot: [
-        { kriteria_id: 0, bobot: 0, value: 0 },
-        { kriteria_id: 0, bobot: 0, value: 0 },
-        { kriteria_id: 0, bobot: 0, value: 0 },
-      ],
-      total_bobot: 0,
-    },
-    {
-      alternatif_id: 0,
-      bobot: [
-        { kriteria_id: 0, bobot: 0, value: 0 },
-        { kriteria_id: 0, bobot: 0, value: 0 },
-        { kriteria_id: 0, bobot: 0, value: 0 },
-      ],
-      total_bobot: 0,
-    },
-  ]);
-
-  useEffect(() => {
-    if (detailAnalisaAlternatif && isRender) {
-      // setAnalisaKonsistensi(detailAnalisaAlternatif?.AnalisaKriteria);
-      setIsRender(false);
-    }
-  }, [detailAnalisaAlternatif, isRender]);
 
   const handleTambahData = async (values: any) => {
     try {
@@ -87,7 +49,7 @@ const TambahAnalisaAlternatif = () => {
       if (response.status === 200) {
         await queryClient.invalidateQueries(["useGetAllAnalisaAlternatif"]);
         alert("Berhasil handleTambahData!");
-        router.push("/data/data-alternatif");
+        router.push("/proses/analisa-alternatif");
       }
     } catch (error: any) {
       alert(error.stack);
@@ -129,9 +91,18 @@ const TambahAnalisaAlternatif = () => {
   return (
     <DefaultTemplate title="TambahAnalisaAlternatif">
       <Formik
+        enableReinitialize
         initialValues={{
-          kategori: "",
-          alternatif: [
+          kategori:
+            JSON.stringify(
+              listKategori?.find(
+                (item: any) =>
+                  item.kategori_id === detailAnalisaAlternatif?.kategori_id
+              )
+            ) || "",
+          alternatif: detailAnalisaAlternatif?.AnalisaAlternatif?.map(
+            (item: any) => ({ ...item, dataJson: item.Alternatif.dataJson })
+          ) || [
             {
               alternatif_id: 0,
               bobot: [
@@ -221,9 +192,9 @@ const TambahAnalisaAlternatif = () => {
                                   })
                                 ),
                               });
-                              const newAlternatif = alternatif;
+                              const newAlternatif = values.alternatif;
                               newAlternatif[index] = {
-                                ...alternatif[index],
+                                ...values.alternatif[index],
                                 ...findAlternatif,
                                 bobot: JSON?.parse(
                                   values?.kategori
@@ -247,30 +218,62 @@ const TambahAnalisaAlternatif = () => {
                         width: 200,
                       },
                       ...Array.from(
-                        values.kategori.length > 1
+                        values?.kategori?.length > 1
                           ? Array.from(
                               JSON.parse(values.kategori)?.AnalisaKriteria
                                 ?.prioritas_bobot
-                            ).map((item: any, index: number) => ({
-                              label: item.kriteria.name,
-                              key: (_: any, j: number) => (
-                                <NumberInput
-                                  onChange={(e) => {
-                                    const newAlternatif = values.alternatif;
-                                    newAlternatif[j].bobot[index].bobot = e;
-                                    newAlternatif[j].bobot[index].value =
-                                      Number(item.value) * Number(e);
-                                    newAlternatif[j].total_bobot =
-                                      newAlternatif[j].bobot.reduce(
-                                        (a: any, b: any) => a + b.value,
-                                        0
+                            )
+                              .map((item: any, index: number) => ({
+                                label: item.kriteria.name,
+                                key: (_: any, j: number) => (
+                                  <NumberInput
+                                    onChange={(e) => {
+                                      const newAlternatif = values.alternatif;
+                                      newAlternatif[j].bobot[index].bobot = e;
+                                      newAlternatif[j].bobot[index].value =
+                                        Number(item.value) * Number(e);
+                                      newAlternatif[j].total_bobot =
+                                        newAlternatif[j].bobot.reduce(
+                                          (a: any, b: any) => a + b.value,
+                                          0
+                                        );
+                                      setFieldValue(
+                                        "alternatif",
+                                        newAlternatif
                                       );
-                                    setFieldValue("alternatif", newAlternatif);
-                                  }}
-                                />
-                              ),
-                              width: 150,
-                            }))
+                                    }}
+                                    value={
+                                      values.alternatif[j].bobot[index].bobot
+                                    }
+                                  />
+                                ),
+                                width: 150,
+                              }))
+                              .concat([
+                                {
+                                  label: "Aksi",
+                                  key: (item, index) => (
+                                    <UnstyledButton
+                                      onClick={() => {
+                                        if (values.alternatif.length < 3)
+                                          return alert(
+                                            "Alternatif tidak boleh kurang dari 3!"
+                                          );
+                                        setFieldValue(
+                                          "alternatif",
+                                          values.alternatif.filter(
+                                            (_: any, alternatifIndex: number) =>
+                                              alternatifIndex !== index
+                                          )
+                                        );
+                                      }}
+                                    >
+                                      <IconTrash />
+                                    </UnstyledButton>
+                                  ),
+                                  width: 50,
+                                },
+                              ])
                           : [
                               {
                                 label: "A",
@@ -287,6 +290,15 @@ const TambahAnalisaAlternatif = () => {
                                 key: () => <NumberInput />,
                                 width: 150,
                               },
+                              {
+                                label: "Aksi",
+                                key: () => (
+                                  <UnstyledButton>
+                                    <IconTrash />
+                                  </UnstyledButton>
+                                ),
+                                width: 50,
+                              },
                             ]
                       ),
                     ]}
@@ -295,6 +307,27 @@ const TambahAnalisaAlternatif = () => {
                       fullname: item.dataJson?.fullname || "",
                     }))}
                   />
+                  <Button
+                    w={"100%"}
+                    onClick={() =>
+                      setFieldValue(
+                        "alternatif",
+                        values.alternatif.concat([
+                          {
+                            alternatif_id: 0,
+                            bobot: [
+                              { kriteria_id: 0, bobot: 0, value: 0 },
+                              { kriteria_id: 0, bobot: 0, value: 0 },
+                              { kriteria_id: 0, bobot: 0, value: 0 },
+                            ],
+                            total_bobot: 0,
+                          },
+                        ])
+                      )
+                    }
+                  >
+                    Tambah Alternatif
+                  </Button>
                 </Fieldset>
               </Paper>
               <Divider />
@@ -307,7 +340,7 @@ const TambahAnalisaAlternatif = () => {
                         key: "fullname",
                       },
                       ...Array.from(
-                        values.kategori.length > 1
+                        values?.kategori?.length > 1
                           ? Array.from(
                               JSON.parse(values.kategori)?.AnalisaKriteria
                                 ?.prioritas_bobot
