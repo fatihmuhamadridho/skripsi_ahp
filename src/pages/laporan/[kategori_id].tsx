@@ -99,7 +99,7 @@ const DetailLaporan = () => {
                 </Html>
               </View>
               <View style={{ marginVertical: 2 }} />
-              <Text style={{ fontSize: 8 }}>
+              <Text style={{ fontSize: 8, alignSelf: "center" }}>
                 Tabel 1. Tabel Analisa Kriteria
               </Text>
               <View style={{ marginVertical: 6 }} />
@@ -137,7 +137,7 @@ const DetailLaporan = () => {
                 </Html>
               </View>
               <View style={{ marginVertical: 2 }} />
-              <Text style={{ fontSize: 8 }}>
+              <Text style={{ fontSize: 8, alignSelf: "center" }}>
                 Tabel 2. Tabel Analisa Alternatif
               </Text>
             </View>

@@ -3,6 +3,7 @@ import DataTable, {
 } from "@/components/atoms/DataTable/DataTable";
 import ModalDelete from "@/components/atoms/Modals/ModalDelete/ModalDelete";
 import DefaultTemplate from "@/components/templates/Default/Default";
+import { useGetAllAnalisaAlternatif } from "@/services/analisaAlternatifService";
 import {
   AnalisaKriteriaService,
   useGetAllAnalisaKriteria,
@@ -31,7 +32,7 @@ const AnalisaAlternatif = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { data: listKriteria }: { data: any[] } = useGetAllKriteria();
-  const { data: listAnalisaKriteria } = useGetAllAnalisaKriteria();
+  const { data: listAnalisaAlternatif } = useGetAllAnalisaAlternatif();
 
   const renderAlternatif = (values: any) => (
     <Group gap={8}>
@@ -73,7 +74,7 @@ const AnalisaAlternatif = () => {
     {
       label: "Alternatif",
       key: renderAlternatif,
-      width: 200,
+      width: 400,
     },
     {
       label: "Jumlah Alternatif",
@@ -89,7 +90,7 @@ const AnalisaAlternatif = () => {
 
   const handleEditData = (kategori_id: number) => {
     router.push(
-      "/proses/analisa-kriteria/edit-analisa-kriteria" + `/${kategori_id}`
+      "/proses/analisa-alternatif/edit-analisa-alternatif" + `/${kategori_id}`
     );
   };
 
@@ -134,7 +135,11 @@ const AnalisaAlternatif = () => {
               />
             </Flex>
           </Group>
-          <DataTable mah={480} header={listHeader} data={listAnalisaKriteria} />
+          <DataTable
+            mah={480}
+            header={listHeader}
+            data={listAnalisaAlternatif}
+          />
         </Stack>
       </Paper>
     </DefaultTemplate>

@@ -14,10 +14,10 @@ export class AnalisaAlternatifService {
     return apiClient.get(this.ApiEndpoint.analisa_alternatif);
   }
 
-  static getOne(analisa_alternatif_id: number) {
-    if (analisa_alternatif_id === undefined) return undefined;
+  static getOne(kategori_id: number) {
+    if (kategori_id === undefined) return undefined;
     return apiClient.get(
-      this.ApiEndpoint.analisa_alternatif + `/${analisa_alternatif_id}`
+      this.ApiEndpoint.analisa_alternatif + `/${kategori_id}`
     );
   }
 
@@ -51,11 +51,10 @@ export const useGetAllAnalisaAlternatif = () => {
   return { data, status, isFetching };
 };
 
-export const useGetOneAnalisaAlternatif = (analisa_alternatif_id: number) => {
+export const useGetOneAnalisaAlternatif = (kategori_id: number) => {
   const { data, status, isFetching } = useQuery({
-    key: ["useGetOneAnalisaAlternatif", analisa_alternatif_id],
-    fetchAction: async () =>
-      AnalisaAlternatifService.getOne(analisa_alternatif_id),
+    key: ["useGetOneAnalisaAlternatif", kategori_id],
+    fetchAction: async () => AnalisaAlternatifService.getOne(kategori_id),
     select: (data: any) => data.data.data,
   });
 

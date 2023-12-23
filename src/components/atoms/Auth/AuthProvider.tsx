@@ -45,8 +45,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
       }, 250);
     }
 
-    !process.env.NEXT_PUBLIC_BYPASS_DEV && loadUser();
-    process.env.NEXT_PUBLIC_BYPASS_DEV && setInitializing(false);
+    process.env.NEXT_PUBLIC_BYPASS_DEV === "false" && loadUser();
+    process.env.NEXT_PUBLIC_BYPASS_DEV === "true" && setInitializing(false);
   }, [router]);
 
   async function onLogin(payload: AuthServiceLoginProps) {
@@ -63,8 +63,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
   async function onLogout() {
     setUser(null);
     localStorage.removeItem("access_token");
-    !process.env.NEXT_PUBLIC_BYPASS_DEV && router.reload();
-    process.env.NEXT_PUBLIC_BYPASS_DEV && router.push("/login");
+    process.env.NEXT_PUBLIC_BYPASS_DEV === "false" && router.reload();
+    process.env.NEXT_PUBLIC_BYPASS_DEV === "true" && router.push("/login");
   }
 
   if (initializing)
